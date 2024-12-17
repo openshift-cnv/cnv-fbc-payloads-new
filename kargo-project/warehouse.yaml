@@ -10,8 +10,8 @@ spec:
     - git:
         branch: main
         commitSelectionStrategy: NewestFromBranch
-        discoveryLimit: 20
+        discoveryLimit: 3
         includePaths:
           - payloads/v4.18
         repoURL: https://github.com/openshift-cnv/cnv-fbc
-        strictSemvers: true
+        strictSemvers: false
