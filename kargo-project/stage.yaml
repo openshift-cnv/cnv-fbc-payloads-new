@@ -34,7 +34,7 @@ spec:
         - uses: copy
           as: payload-copy
           config:
-            inPath: ./github/payloads/v4.18
+            inPath: ./github/payloads
             outPath: ./gitlab
         - uses: git-commit
           as: gitlab-commit
