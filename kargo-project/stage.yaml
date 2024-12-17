@@ -1,0 +1,46 @@
+metadata:
+  name: qe-trigger
+  namespace: fbc-payload
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: fbc-payload
+      sources:
+        direct: true
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          as: github-clone
+          config:
+            checkout:
+              - fromFreight: true
+                fromOrigin:
+                  kind: Warehouse
+                  name: fbc-payload
+                path: ./github
+            repoURL: https://github.com/openshift-cnv/cnv-fbc
+        - uses: git-clone
+          as: gitlab-clone
+          config:
+            checkout:
+              - branch: main
+                path: ./gitlab
+            insecureSkipTLSVerify: true
+            repoURL: https://gitlab.cee.redhat.com/openshift-virtualization/fbc-payloads
+        - uses: copy
+          as: payload-copy
+          config:
+            inPath: ./github/payloads/v4.18
+            outPath: ./gitlab
+        - uses: git-commit
+          as: gitlab-commit
+          config:
+            message: Update payload
+            path: ./gitlab
+        - uses: git-push
+          as: gitlab-push
+          config:
+            path: ./gitlab
+            targetBranch: main

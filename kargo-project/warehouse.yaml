@@ -1,0 +1,17 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: fbc-payload
+  namespace: fbc-payload
+spec:
+  freightCreationPolicy: Automatic
+  interval: 1m0s
+  subscriptions:
+    - git:
+        branch: main
+        commitSelectionStrategy: NewestFromBranch
+        discoveryLimit: 20
+        includePaths:
+          - payloads/v4.18
+        repoURL: https://github.com/openshift-cnv/cnv-fbc
+        strictSemvers: true
