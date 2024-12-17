@@ -4,6 +4,6 @@ metadata:
   name: fbc-payload
 spec:
   promotionPolicies:
-    - stage: fbc-payload
+    - stage: qe-trigger
       autoPromotionEnabled: true
 
