@@ -12,6 +12,6 @@ spec:
         commitSelectionStrategy: NewestFromBranch
         discoveryLimit: 3
         includePaths:
-          - ./payloads
-        repoURL: https://github.com/openshift-cnv/cnv-fbc
+          - ./
+        repoURL: https://github.com/openshift-cnv/cnv-fbc-payloads
         strictSemvers: false
