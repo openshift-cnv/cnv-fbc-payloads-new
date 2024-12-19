@@ -22,7 +22,7 @@ spec:
                   kind: Warehouse
                   name: fbc-payload
                 path: ./github
-            repoURL: https://github.com/openshift-cnv/cnv-fbc
+            repoURL: https://github.com/openshift-cnv/cnv-fbc-payloads
         - uses: git-clone
           as: gitlab-clone
           config:
@@ -34,7 +34,7 @@ spec:
         - uses: copy
           as: payload-copy
           config:
-            inPath: ./github/payloads
+            inPath: ./github
             outPath: ./gitlab
         - uses: git-commit
           as: gitlab-commit
