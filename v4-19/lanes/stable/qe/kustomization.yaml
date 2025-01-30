@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namePrefix: stable-qe-
+resources:
+  - https://gitlab.cee.redhat.com/openshift-virtualization/release-fast-demo/-/raw/main/Jobs/qe/qeJob.yaml
+configMapGenerator:
+  - name: payload
+    files:
+      - payload.yaml
+    options:
+      disableNameSuffixHash: true

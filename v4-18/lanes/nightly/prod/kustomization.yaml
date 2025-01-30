@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namePrefix: nightly-prod-
+resources:
+  - https://gitlab.cee.redhat.com/openshift-virtualization/release-fast-demo/-/raw/main/Jobs/release/releaseJob.yaml
+  - https://gitlab.cee.redhat.com/openshift-virtualization/release-fast-demo/-/raw/main/Jobs/rebuild/rebuildJob.yaml
+configMapGenerator:
+  - name: payload
+    files:
+      - payload.yaml
+    options:
+      disableNameSuffixHash: true
+  - name: next-channel
+    literals:
+      - NEXT_CHANNEL="candidate"
+    options:
+      disableNameSuffixHash: true
