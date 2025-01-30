@@ -3,6 +3,7 @@ kind: Kustomization
 namePrefix: candidate-prod-
 resources:
   - ../../../../Jobs/release
+  - ../../../../Jobs/rebuild
 configMapGenerator:
   - name: payload
     files:
