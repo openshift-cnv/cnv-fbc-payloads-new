@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - rebuildJob.yaml
+images:
+- name: quay.io/redhat-user-workloads/ocp-virt-images-tenant/pipeline-tools
+  newTag: 81e1e1a7170af04eb135d67a82c32933da91f962
