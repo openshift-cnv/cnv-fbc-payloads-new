@@ -1,9 +1,0 @@
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Project
-metadata:
-  name: fbc-payload
-spec:
-  promotionPolicies:
-    - stage: qe-trigger
-      autoPromotionEnabled: true
-

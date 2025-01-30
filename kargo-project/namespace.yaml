@@ -1,7 +1,0 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: fbc-payload
-  labels:
-    kargo.akuity.io/project: 'true'
-    argocd.argoproj.io/managed-by: openshift-gitops
