@@ -4,4 +4,4 @@ resources:
   - releaseJob.yaml
 images:
 - name: quay.io/redhat-user-workloads/ocp-virt-images-tenant/pipeline-tools
-  newTag: 81e1e1a7170af04eb135d67a82c32933da91f962
+  newTag: 909f4e68e74a3b8d98cbcff27219259d5b57eb57
