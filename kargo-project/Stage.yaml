@@ -3,7 +3,7 @@ kind: Stage
 metadata:
   labels:
     app.kubernetes.io/instance: kargo-fbc-payload-config
-  name: qe-trigger
+  name: get-github-payload
 spec:
   promotionTemplate:
     spec:
