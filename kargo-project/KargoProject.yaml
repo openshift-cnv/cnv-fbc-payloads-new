@@ -1,0 +1,10 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  labels:
+    app.kubernetes.io/instance: kargo-fbc-payload-config
+  name: fbc-payload
+spec:
+  promotionPolicies:
+    - autoPromotionEnabled: true
+      stage: qe-trigger

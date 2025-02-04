@@ -1,0 +1,52 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  labels:
+    app.kubernetes.io/instance: kargo-fbc-payload-config
+  name: qe-trigger
+spec:
+  promotionTemplate:
+    spec:
+      steps:
+        - as: github-clone
+          config:
+            checkout:
+              - fromFreight: true
+                fromOrigin:
+                  kind: Warehouse
+                  name: fbc-payload
+                path: ./github
+            repoURL: https://github.com/openshift-cnv/cnv-fbc-payloads
+          uses: git-clone
+        - as: gitlab-clone
+          config:
+            checkout:
+              - branch: main
+                path: ./gitlab
+            insecureSkipTLSVerify: true
+            repoURL: https://gitlab.cee.redhat.com/openshift-virtualization/fbc-payloads
+          uses: git-clone
+        - uses: git-clear
+          config:
+            path: ./gitlab
+        - as: payload-copy
+          config:
+            inPath: ./github
+            outPath: ./gitlab
+          uses: copy
+        - as: gitlab-commit
+          config:
+            message: Update payload
+            path: ./gitlab
+          uses: git-commit
+        - as: gitlab-push
+          config:
+            path: ./gitlab
+            targetBranch: main
+          uses: git-push
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: fbc-payload
+      sources:
+        direct: true
