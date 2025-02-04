@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Must have a real name (Kustomize requires metadata.name).
+  name: rebuild-fbc
+  # Argo CD annotations for PostSync Job that gets removed before each sync
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/wave: "2"
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      volumes:
+      - name: payload
+        configMap:
+          name: payload
+      containers:
+      - name: rebuild
+        image: quay.io/redhat-user-workloads/ocp-virt-images-tenant/pipeline-tools
+        workingDir: /tmp
+        volumeMounts:
+        - name: payload
+          mountPath: /tmp
+        args:
+        - /bin/sh
+        - '-c'
+        - |
+          set -eux
+
+          # Extract values from payload.yaml using yq
+          INDEX_IMAGE="$(yq '.index_image' payload.yaml)"
+          SNAPSHOT_ID="$(yq '.snapshot_id' payload.yaml)"
+          FROM_INDEX="$(yq '.from_index' payload.yaml)"
+          FBC_FRAGMENT="$(yq '.fbc_fragment' payload.yaml)"
+          CHANNEL="$(yq '.channel' payload.yaml)"
+          HCO_BUNDLE_REGISTRY_BY_SHA="$(yq '.hco_bundle_registry_by_sha' payload.yaml)"
+          HCO_BUNDLE_REGISTRY_BY_TAG="$(yq '.hco_bundle_registry_by_tag' payload.yaml)"
+          HCO_BUNDLE_VERSION="$(yq '.hco_bundle_version' payload.yaml)"
+          RELEASEPLAN="$(yq '.releasePlan' payload.yaml)"
+          VERSION="$(yq '.version' payload.yaml)"
+          VERSION_SERIALIZED="${VERSION//-/.}"
+
+          # Debug output for extracted values
+          echo "INDEX_IMAGE --> ${INDEX_IMAGE}"
+          echo "SNAPSHOT_ID --> ${SNAPSHOT_ID}"
+          echo "FROM_INDEX ---> ${FROM_INDEX}"
+          echo "FBC_FRAGMENT ---> ${FBC_FRAGMENT}"
+          echo "CHANNEL ---> ${CHANNEL}"
+          echo "HCO_BUNDLE_REGISTRY_BY_SHA ---> ${HCO_BUNDLE_REGISTRY_BY_SHA}"
+          echo "HCO_BUNDLE_REGISTRY_BY_TAG ---> ${HCO_BUNDLE_REGISTRY_BY_TAG}"
+          echo "HCO_BUNDLE_VERSION ---> ${HCO_BUNDLE_VERSION}"
+          echo "RELEASEPLAN ---> ${RELEASEPLAN}"
+          echo "VERSION ---> ${VERSION}"
+          echo "VERSION_SERIALIZED ---> ${VERSION_SERIALIZED}"
+
+          # Correctly construct the JSON payload for the curl request
+          curl -k -X POST -u 'cnv-qe-automation:110275d9ecdb17f146c0a6cd0e6142688e' \
+          "https://jenkins-csb-cnvqe-main.dno.corp.redhat.com/job/kargo-event/buildWithParameters?BUNDLE=${HCO_BUNDLE_VERSION}&CHANNEL=${CHANNEL}&SNAPSHOT=${SNAPSHOT_ID}&INDEX_IMAGE=${INDEX_IMAGE}"
+
+      restartPolicy: Never
