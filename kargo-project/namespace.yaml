@@ -4,3 +4,4 @@ metadata:
   name: fbc-payload
   labels:
     argocd.argoproj.io/managed-by: openshift-gitops
+    kargo.akuity.io/project: "true"
