@@ -2,6 +2,8 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: fbc-payload
+  annotations:
+    kargo.akuity.io/color: red
 spec:
   freightCreationPolicy: Automatic
   interval: 10m0s

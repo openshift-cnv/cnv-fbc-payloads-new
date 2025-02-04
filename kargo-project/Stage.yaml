@@ -3,6 +3,8 @@ kind: Stage
 metadata:
   labels:
     app.kubernetes.io/instance: kargo-fbc-payload-config
+  annotations:
+    kargo.akuity.io/color: red
   name: get-github-payload
 spec:
   promotionTemplate:
