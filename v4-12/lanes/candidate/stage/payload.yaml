@@ -7,6 +7,5 @@ hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/h
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry:v4.12.17-9
 hco_bundle_version: v4.12.17-9
 version: v4-12
-releasePlan: stage
+releasePlan: qe
 #######
-#
