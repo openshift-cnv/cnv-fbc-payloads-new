@@ -47,7 +47,7 @@ spec:
             -d "{
               \"build\": \"${HCO_BUNDLE_VERSION}\",
               \"channel\": \"${NEXT_CHANNEL}\",
-              \"dryRun\": true
+              \"dryRun\": false
             }"
 
       restartPolicy: Never
