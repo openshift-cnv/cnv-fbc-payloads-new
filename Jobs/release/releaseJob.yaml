@@ -109,8 +109,7 @@ spec:
               release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
               MESSAGE=$(echo "release ${release_name} created successfully in dry-run mode")
               send_notification "info" "$MESSAGE"
+              exit 0
           fi
-
-
 
       restartPolicy: Never
