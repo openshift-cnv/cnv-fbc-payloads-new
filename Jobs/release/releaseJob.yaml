@@ -60,7 +60,7 @@ spec:
           yq '.spec.snapshot = "'${SNAPSHOT_ID}'"' -i /tmp/manifest.yaml
           yq '.spec.releasePlan = "'cnv-fbc-${RELEASEPLAN}-index-releaseplan-${VERSION}'"' -i /tmp/manifest.yaml
           yq '.metadata.namespace = "'${NAMESPACE}'"' -i /tmp/manifest.yaml
-          yq '.metadata.nam = "'${SNAPSHOT_ID}-${RELEASEPLAN}'"' -i /tmp/manifest.yaml
+          yq '.metadata.name = "'${SNAPSHOT_ID}-${RELEASEPLAN}'"' -i /tmp/manifest.yaml
           # print the manifest file
           cat /tmp/manifest.yaml
 
@@ -76,7 +76,7 @@ spec:
               --data "{
                   \"NotificationID\": \"${SNAPSHOT_ID}-${TIME}\",
                   \"type\": \"$type\",
-                  \"message\": \"$MESSAGE\",
+                  \"message\": \"$message\",
                   \"state\": \"new\",
                   \"slack\": \"true\"
               }" > /dev/null 2>&1
@@ -88,26 +88,26 @@ spec:
           echo "Applying the manifest"
           if [ "${DRY_RUN}" == "false" ]; then
               echo "Check if the resource already exists"
-              exist=$(oc get -f /tmp/manifest.yaml -n ${NAMESPACE} --ignore-not-found=true)
+              exist=$(oc get -f /tmp/manifest.yaml -n "${NAMESPACE}" --ignore-not-found=true)
               if [ -z "$exist" ]; then
                   echo "Applying the manifest"
-                  oc apply -f /tmp/manifest.yaml -n ${NAMESPACE} --validate=true
+                  oc apply -f /tmp/manifest.yaml -n "${NAMESPACE}" --validate=true
                   release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
-                  MESSAGE=$(echo "release ${release_name} created successfully")
+                  MESSAGE="Release ${release_name} created successfully"
                   send_notification "info" "$MESSAGE"
                   exit 0
               else
                   echo "Resource already exists, skipping the apply"
                   release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
-                  MESSAGE=$(echo "release ${release_name} already exists")
+                  MESSAGE="Release ${release_name} already exists"
                   send_notification "warning" "$MESSAGE"
                   exit 1
               fi
           else
               echo "DRY_RUN is set to true, skipping the apply"
-              oc apply -f /tmp/manifest.yaml -n ${NAMESPACE} --validate=true --dry-run=client
+              oc apply -f /tmp/manifest.yaml -n "${NAMESPACE}" --validate=true --dry-run=client
               release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
-              MESSAGE=$(echo "release ${release_name} created successfully in dry-run mode")
+              MESSAGE="Release ${release_name} created successfully in dry-run mode"
               send_notification "info" "$MESSAGE"
               exit 0
           fi
