@@ -1,0 +1,107 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Must have a real name (Kustomize requires metadata.name).
+  name: release-errata
+  # Argo CD annotations for PostSync Job that gets removed before each sync
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/wave: "0"
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      volumes:
+      - name: payload
+        configMap:
+          name: payload
+      containers:
+      - name: release-errata
+        image: quay.io/redhat-user-workloads/ocp-virt-images-tenant/pipeline-tools
+        workingDir: /tmp
+        envFrom:
+          - configMapRef:
+              name: release-config
+          - secretRef:
+              name: stone-prd-rh01
+        volumeMounts:
+        - name: payload
+          mountPath: /tmp
+        args:
+        - /bin/bash
+        - '-c'
+        - |
+          set -eux
+
+          INDEX_IMAGE="$(yq '.index_image' payload.yaml)" && echo "INDEX_IMAGE --> ${INDEX_IMAGE}"
+          SNAPSHOT_ID="$(yq '.snapshot_id' payload.yaml)" && echo "SNAPSHOT_ID --> ${SNAPSHOT_ID}"
+          FROM_INDEX="$(yq '.from_index' payload.yaml)" && echo "FROM_INDEX --> ${FROM_INDEX}"
+          FBC_FRAGMENT="$(yq '.fbc_fragment' payload.yaml)" && echo "FBC_FRAGMENT --> ${FBC_FRAGMENT}"
+          CHANNEL="$(yq '.channel' payload.yaml)" && echo "CHANNEL --> ${CHANNEL}"
+          HCO_BUNDLE_REGISTRY_BY_SHA="$(yq '.hco_bundle_registry_by_sha' payload.yaml)" && echo "HCO_BUNDLE_REGISTRY_BY_SHA --> ${HCO_BUNDLE_REGISTRY_BY_SHA}"
+          HCO_BUNDLE_REGISTRY_BY_TAG="$(yq '.hco_bundle_registry_by_tag' payload.yaml)" && echo "HCO_BUNDLE_REGISTRY_BY_TAG --> ${HCO_BUNDLE_REGISTRY_BY_TAG}"
+          HCO_BUNDLE_VERSION="$(yq '.hco_bundle_version' payload.yaml)" && echo "HCO_BUNDLE_VERSION --> ${HCO_BUNDLE_VERSION}"
+          RELEASEPLAN="$(yq '.releasePlan' payload.yaml)" && echo "RELEASEPLAN --> ${RELEASEPLAN}"
+          VERSION="$(yq '.version' payload.yaml)" && echo "VERSION --> ${VERSION}"
+          VERSION_SERIALIZED="${VERSION//-/.}" && echo "VERSION_SERIALIZED --> ${VERSION_SERIALIZED}"
+          ERRATA_URL='https://errata.devel.redhat.com'
+
+          # TODO: Errata kerberos login
+          ###
+
+          errata_get_state () {
+            status=$(curl --user ':' --negotiate "${ERRATA_URL}/api/v1/erratum/${1}" | jq -r '.errata.rhea.status')
+            echo "${status}"
+          }
+
+          errata_ship_live () {
+            echo "Changing errata $1 advisory state to REL_PREP"
+            curl --user ':' --negotiate -d "new_state=REL_PREP" -X POST "${ERRATA_URL}/api/v1/erratum/${1}/change_state"
+            retries=40
+            wait_time=300
+            count=0
+
+            while [[ $count -lt $retries ]]; do
+              errata_state=$(errata_get_state $1)
+              if [ "$errata_state" = "SHIPPED_LIVE" ]
+              then
+                return 0
+              fi
+
+              count=$((count+1))
+
+              if [[ $count -lt $retries ]]; then
+                echo "Advisory $1 still in $errata_state , retrying in $wait_time seconds..."
+                sleep "$wait_time"
+              fi
+            done
+            echo "Timeouting the ship_live process."
+            return 1
+          }
+
+          # TODO get errata advisory
+          ADVISORY_ID='144450'
+
+          # Get advisory status
+          ADVISORY_STATUS=$(errata_get_state "${ADVISORY_ID}")
+          if [ "$ADVISORY_STATUS" = "QE" ]
+          then
+            echo "The advisory must be in QE"
+            exit 1
+          fi
+
+          # Verify advisory's bundle
+          HBR_NVR=$(curl --user ':' --negotiate "${ERRATA_URL}/api/v1/erratum/${ADVISORY_ID}/builds" | jq -r ".\"RHEL-9-CNV-${VERSION_SERIALIZED}\".builds[] | select(.\"hco-bundle-registry-container-${HCO_BUNDLE_VERSION}\".nvr == \"hco-bundle-registry-container-${HCO_BUNDLE_VERSION}\") | .\"hco-bundle-registry-container-${HCO_BUNDLE_VERSION}\".nvr")
+          if [ "$HBR_NVR" = "null" ]
+          then
+            echo "Unable to find the bundle in the advisory"
+            exit 1
+          fi
+
+          errata_ship_live "${ADVISORY_ID}"
+          
+          
+
+
+      restartPolicy: Never
