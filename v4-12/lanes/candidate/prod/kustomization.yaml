@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namePrefix: candidate-prod-
 resources:
-#   - ../../../../Jobs/release
+  - ../../../../Jobs/release
   - ../../../../Jobs/rebuild
 configMapGenerator:
   - name: payload
