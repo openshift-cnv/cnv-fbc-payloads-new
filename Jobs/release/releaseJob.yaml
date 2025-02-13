@@ -13,6 +13,8 @@ spec:
   template:
     spec:
       volumes:
+      - name: kubeconfig
+        emptyDir: {}
       - name: payload
         configMap:
           name: payload
@@ -37,11 +39,18 @@ spec:
           mountPath: /files
         - name: tmp
           mountPath: /tmp
+        - name: kubeconfig
+          mountPath: /.kube
         args:
         - /bin/sh
         - '-c'
         - |
           set -eux
+
+          TEMP_DIR=$(mktemp -d)
+          KUBECONFIG="${TEMP_DIR}/kubeconfig"
+          export KUBECONFIG
+
           cp /payload/payload.yaml /tmp/payload.yaml
 
           chmod +w /tmp/payload.yaml
