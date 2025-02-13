@@ -32,7 +32,7 @@ spec:
               name: stone-prd-rh01
         volumeMounts:
         - name: payload
-          mountPath: /tmp
+          mountPath: /payload
         - name: release-files
           mountPath: /files
         - name: tmp
@@ -56,9 +56,8 @@ spec:
           VERSION_SERIALIZED="${VERSION//-/.}" && echo "VERSION_SERIALIZED --> ${VERSION_SERIALIZED}"
 
           # Create the manifest file 
-          cp /files/manifest.yaml /tmp/manifest.yaml
-          chmod +x /tmp/apply.sh
-          chmod +x /tmp/manifest.yaml
+          cp /payload/manifest.yaml /tmp/manifest.yaml
+          chmod +w /tmp/manifest.yaml
 
           # Replace the values in the manifest.yaml file
           yq '.spec.snapshot = "'${SNAPSHOT_ID}'"' -i /tmp/manifest.yaml
