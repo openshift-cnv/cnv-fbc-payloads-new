@@ -42,6 +42,9 @@ spec:
         - '-c'
         - |
           set -eux
+          cp /payload/payload.yaml /tmp/manifest.yaml
+          
+          chmod +w /tmp/manifest.yaml
 
           INDEX_IMAGE="$(yq '.index_image' payload.yaml)" && echo "INDEX_IMAGE --> ${INDEX_IMAGE}"
           SNAPSHOT_ID="$(yq '.snapshot_id' payload.yaml)" && echo "SNAPSHOT_ID --> ${SNAPSHOT_ID}"
@@ -56,7 +59,8 @@ spec:
           VERSION_SERIALIZED="${VERSION//-/.}" && echo "VERSION_SERIALIZED --> ${VERSION_SERIALIZED}"
 
           # Create the manifest file 
-          cp /payload/manifest.yaml /tmp/manifest.yaml
+
+          cp /files/manifest.yaml /tmp/manifest.yaml
           chmod +w /tmp/manifest.yaml
 
           # Replace the values in the manifest.yaml file
