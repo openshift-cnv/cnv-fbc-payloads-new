@@ -42,9 +42,9 @@ spec:
         - '-c'
         - |
           set -eux
-          cp /payload/payload.yaml /tmp/manifest.yaml
-          
-          chmod +w /tmp/manifest.yaml
+          cp /payload/payload.yaml /tmp/payload.yaml
+
+          chmod +w /tmp/payload.yaml
 
           INDEX_IMAGE="$(yq '.index_image' payload.yaml)" && echo "INDEX_IMAGE --> ${INDEX_IMAGE}"
           SNAPSHOT_ID="$(yq '.snapshot_id' payload.yaml)" && echo "SNAPSHOT_ID --> ${SNAPSHOT_ID}"
