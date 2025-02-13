@@ -6,7 +6,7 @@ resources:
 configMapGenerator:
   - literals:
       - NAMESPACE="cnv-fbc-tenant"
-      - DRY_RUN="true"
+      - DRY_RUN="false"
       - NOTIFICATION_URL=http://notification-service.cnv-fbc-konflux:3000/notifications/register
     name: release-config
     options:
