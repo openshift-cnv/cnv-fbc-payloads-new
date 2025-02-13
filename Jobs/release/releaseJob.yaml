@@ -19,6 +19,8 @@ spec:
       - name: release-files
         configMap:
           name: release-files
+      - name: tmp
+        emptyDir: {}
       containers:
       - name: rebuild
         image: quay.io/redhat-user-workloads/ocp-virt-images-tenant/pipeline-tools
@@ -33,6 +35,8 @@ spec:
           mountPath: /tmp
         - name: release-files
           mountPath: /files
+        - name: tmp
+          mountPath: /tmp
         args:
         - /bin/sh
         - '-c'
@@ -53,8 +57,8 @@ spec:
 
           # Create the manifest file 
           cp /files/manifest.yaml /tmp/manifest.yaml
-          cp apply.sh /tmp/apply.sh
           chmod +x /tmp/apply.sh
+          chmod +x /tmp/manifest.yaml
 
           # Replace the values in the manifest.yaml file
           yq '.spec.snapshot = "'${SNAPSHOT_ID}'"' -i /tmp/manifest.yaml
