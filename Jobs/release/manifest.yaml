@@ -1,8 +1,0 @@
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: Release
-metadata:
-  name: name
-  namespace: cnv-fbc-tenant
-spec:
-  releasePlan: releaseplan
-  snapshot: snapshot
