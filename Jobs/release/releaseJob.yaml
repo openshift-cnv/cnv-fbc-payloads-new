@@ -1,0 +1,131 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Must have a real name (Kustomize requires metadata.name).
+  name: release-fbc
+  # Argo CD annotations for PostSync Job that gets removed before each sync
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/wave: "1"
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      volumes:
+      - name: kubeconfig
+        emptyDir: {}
+      - name: payload
+        configMap:
+          name: payload
+      - name: release-files
+        configMap:
+          name: release-files
+      - name: tmp
+        emptyDir: {}
+      containers:
+      - name: rebuild
+        image: quay.io/redhat-user-workloads/ocp-virt-images-tenant/pipeline-tools
+        workingDir: /tmp
+        envFrom:
+          - configMapRef:
+              name: release-config
+          - secretRef:
+              name: stone-prd-rh01
+        volumeMounts:
+        - name: payload
+          mountPath: /payload
+        - name: release-files
+          mountPath: /files
+        - name: tmp
+          mountPath: /tmp
+        - name: kubeconfig
+          mountPath: /.kube
+        args:
+        - /bin/sh
+        - '-c'
+        - |
+          set -eux
+
+          TEMP_DIR=$(mktemp -d)
+          KUBECONFIG="${TEMP_DIR}/kubeconfig"
+          export KUBECONFIG
+
+          cp /payload/payload.yaml /tmp/payload.yaml
+
+          chmod +w /tmp/payload.yaml
+
+          INDEX_IMAGE="$(yq '.index_image' payload.yaml)" && echo "INDEX_IMAGE --> ${INDEX_IMAGE}"
+          SNAPSHOT_ID="$(yq '.snapshot_id' payload.yaml)" && echo "SNAPSHOT_ID --> ${SNAPSHOT_ID}"
+          FROM_INDEX="$(yq '.from_index' payload.yaml)" && echo "FROM_INDEX --> ${FROM_INDEX}"
+          FBC_FRAGMENT="$(yq '.fbc_fragment' payload.yaml)" && echo "FBC_FRAGMENT --> ${FBC_FRAGMENT}"
+          CHANNEL="$(yq '.channel' payload.yaml)" && echo "CHANNEL --> ${CHANNEL}"
+          HCO_BUNDLE_REGISTRY_BY_SHA="$(yq '.hco_bundle_registry_by_sha' payload.yaml)" && echo "HCO_BUNDLE_REGISTRY_BY_SHA --> ${HCO_BUNDLE_REGISTRY_BY_SHA}"
+          HCO_BUNDLE_REGISTRY_BY_TAG="$(yq '.hco_bundle_registry_by_tag' payload.yaml)" && echo "HCO_BUNDLE_REGISTRY_BY_TAG --> ${HCO_BUNDLE_REGISTRY_BY_TAG}"
+          HCO_BUNDLE_VERSION="$(yq '.hco_bundle_version' payload.yaml)" && echo "HCO_BUNDLE_VERSION --> ${HCO_BUNDLE_VERSION}"
+          RELEASEPLAN="$(yq '.releasePlan' payload.yaml)" && echo "RELEASEPLAN --> ${RELEASEPLAN}"
+          VERSION="$(yq '.version' payload.yaml)" && echo "VERSION --> ${VERSION}"
+          VERSION_SERIALIZED="${VERSION//-/.}" && echo "VERSION_SERIALIZED --> ${VERSION_SERIALIZED}"
+
+          # Create the manifest file 
+
+          cp /files/manifest.yaml /tmp/manifest.yaml
+          chmod +w /tmp/manifest.yaml
+
+          # Replace the values in the manifest.yaml file
+          yq '.spec.snapshot = "'${SNAPSHOT_ID}'"' -i /tmp/manifest.yaml
+          yq '.spec.releasePlan = "'cnv-fbc-${RELEASEPLAN}-index-releaseplan-${VERSION}'"' -i /tmp/manifest.yaml
+          yq '.metadata.namespace = "'${NAMESPACE}'"' -i /tmp/manifest.yaml
+          yq '.metadata.name = "'${SNAPSHOT_ID}-${RELEASEPLAN}'"' -i /tmp/manifest.yaml
+          # print the manifest file
+          cat /tmp/manifest.yaml
+
+          send_notification() {
+              local type="$1"
+              local message="$2"
+              HOSTNAME=$(cat /etc/hostname)
+              TIME=$(date +%H%M%S)
+              curl -s -X 'POST' \
+              "$NOTIFICATION_URL" \
+              -H 'accept: */*' \
+              -H 'Content-Type: application/json' \
+              --data "{
+                  \"NotificationID\": \"${SNAPSHOT_ID}-${TIME}\",
+                  \"type\": \"$type\",
+                  \"message\": \"$message\",
+                  \"state\": \"new\",
+                  \"slack\": \"true\"
+              }" > /dev/null 2>&1
+          }
+
+          echo "login to the cluster"
+          oc login --token=${TOKEN} --server=${SERVER} --insecure-skip-tls-verify=true
+
+          echo "Applying the manifest"
+          if [ "${DRY_RUN}" == "false" ]; then
+              echo "Check if the resource already exists"
+              exist=$(oc get -f /tmp/manifest.yaml -n "${NAMESPACE}" --ignore-not-found=true)
+              if [ -z "$exist" ]; then
+                  echo "Applying the manifest"
+                  oc apply -f /tmp/manifest.yaml -n "${NAMESPACE}" --validate=true
+                  release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
+                  MESSAGE="Release ${release_name} created successfully"
+                  send_notification "info" "$MESSAGE"
+                  exit 0
+              else
+                  echo "Resource already exists, skipping the apply"
+                  release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
+                  MESSAGE="Release ${release_name} already exists"
+                  send_notification "warning" "$MESSAGE"
+                  exit 1
+              fi
+          else
+              echo "DRY_RUN is set to true, skipping the apply"
+              oc apply -f /tmp/manifest.yaml -n "${NAMESPACE}" --validate=true --dry-run=client
+              release_name=$(yq '.metadata.name' /tmp/manifest.yaml)
+              MESSAGE="Release ${release_name} created successfully in dry-run mode"
+              send_notification "info" "$MESSAGE"
+              exit 0
+          fi
+
+      restartPolicy: Never
