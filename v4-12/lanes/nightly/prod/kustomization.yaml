@@ -9,8 +9,3 @@ configMapGenerator:
       - payload.yaml
     options:
       disableNameSuffixHash: true
-  - name: next-channel
-    literals:
-      - NEXT_CHANNEL="candidate"
-    options:
-      disableNameSuffixHash: true
