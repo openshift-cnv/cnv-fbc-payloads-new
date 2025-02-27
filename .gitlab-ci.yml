@@ -1,0 +1,16 @@
+approve_lgtm:
+  image: registry.redhat.io/ubi9/ubi-minimal:9.5-1739420147
+  script:
+    - echo "Checking MRs with LGTM label..."
+    - |
+      MR_IDS=$(curl -s --header ""Authorization: Bearer $GITLAB_BOT_TOKEN" \
+        "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/merge_requests?state=open" | jq -r '.[] | select(.labels[]? == "LGTM") | .iid')
+
+      for MR_ID in $MR_IDS; do
+        echo "Approving MR #$MR_ID"
+        curl --request POST \
+          --header "Authorization: Bearer $GITLAB_BOT_TOKEN" \
+          "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/merge_requests/$MR_ID/approve"
+      done
+  only:
+    - merge_requests
