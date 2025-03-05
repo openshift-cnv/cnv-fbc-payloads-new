@@ -10,3 +10,5 @@ version: v4-12
 releasePlan: qe
 freightName: null
 freightID: null
+checkListEpic:
+  URL: https://issues.redhat.com/browse/CNV-00fff234ty
