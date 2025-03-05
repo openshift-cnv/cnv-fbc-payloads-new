@@ -11,3 +11,5 @@ releasePlan: qe
 freightName: null
 freightID: null
 minorVersion: v4.12.17
+checkListEpic:
+  URL: https://issues.redhat.com/browse/cnv-fbc-v4-12-w46nx
