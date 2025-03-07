@@ -6,8 +6,9 @@ channel: candidate
 hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry@sha256:a3e133af480f3613a2aa1a044abe0795fb7f4c6efdc3ee8a4621dca2b6910ac6
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry:v4.12.17-14
 hco_bundle_version: v4.12.17-14
+minorVersion: v4.12.17
 version: v4-12
 releasePlan: errata
 freightName: null
 freightID: null
-##
+prNumber: null
