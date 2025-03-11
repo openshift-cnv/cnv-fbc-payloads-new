@@ -13,6 +13,3 @@ freightName: nightly-qe.01jp31h7bb040kkm7vnp7sarxr.595b213
 freightID: nightly-qe.01jp31h7bb040kkm7vnp7sarxr.595b213
 prNumber: null
 ####
-
-qePromote:
-  - ${DATE}
