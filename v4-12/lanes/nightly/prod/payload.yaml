@@ -10,6 +10,9 @@ minorVersion: v4.12.17
 version: v4-12
 releasePlan: prod
 freightName: cnv-fbc-v4-12-v9zp4
-freightID: nightly-prod.01jp2ybajftwwbxr4b5eksvsxa.8f5a742
+freightID: nightly-prod.01jp31hs1vz0ae71hey4xjky03.595b213
 prNumber: null
 ####
+
+qePromote:
+  - ${DATE}
