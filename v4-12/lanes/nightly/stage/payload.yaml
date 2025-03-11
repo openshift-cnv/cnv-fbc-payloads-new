@@ -14,5 +14,4 @@ freightID: null
 prNumber: null
 ####
 
-qePromote:
-  - ${DATE}
+
