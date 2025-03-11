@@ -12,3 +12,5 @@ releasePlan: stage
 freightName: cnv-fbc-v4-19-gxfdm
 freightID: null
 prNumber: null
+qePromote:
+  - Tue Mar 11 20:32:37 UTC 2025
