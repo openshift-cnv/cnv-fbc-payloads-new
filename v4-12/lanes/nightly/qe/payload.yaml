@@ -9,7 +9,10 @@ hco_bundle_version: v4.12.17-30
 minorVersion: v4.12.17
 version: v4-12
 releasePlan: qe
-freightName: nightly-qe.01jp2yavq66q0rxyt75tvdvt4w.8f5a742
-freightID: nightly-qe.01jp2yavq66q0rxyt75tvdvt4w.8f5a742
+freightName: nightly-qe.01jp31h7bb040kkm7vnp7sarxr.595b213
+freightID: nightly-qe.01jp31h7bb040kkm7vnp7sarxr.595b213
 prNumber: null
 ####
+
+qePromote:
+  - ${DATE}
