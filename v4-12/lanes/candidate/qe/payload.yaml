@@ -10,5 +10,10 @@ minorVersion: v4.12.17
 version: v4-12
 releasePlan: qe
 freightName: cnv-fbc-v4-12-v5mjh
-freightID: null
+freightID: candidate-qe.01jp330k5shtja91ej43smc8mw.e0bcbe8
 prNumber: null
+###
+
+qePromote:
+  - Tue Mar 11 16:54:28 UTC 2025
+  - Tue Mar 11 17:05:54 UTC 2025
