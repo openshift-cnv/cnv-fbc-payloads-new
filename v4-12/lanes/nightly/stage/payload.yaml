@@ -13,3 +13,6 @@ freightName: cnv-fbc-v4-12-v9zp4
 freightID: null
 prNumber: null
 ####
+
+qePromote:
+  - ${DATE}
