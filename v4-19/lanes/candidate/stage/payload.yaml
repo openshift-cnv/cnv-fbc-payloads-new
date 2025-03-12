@@ -12,3 +12,5 @@ releasePlan: stage
 freightName: null
 freightID: null
 prNumber: null
+qePromote:
+  - Wed Mar 12 05:46:32 UTC 2025
