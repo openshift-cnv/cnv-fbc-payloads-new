@@ -10,5 +10,7 @@ minorVersion: v4.19.0.rhel9
 version: v4-19
 releasePlan: qe
 freightName: null
-freightID: null
+freightID: candidate-qe.01jp4en8a16804kd3z6tr5rnbk.1afe2ce
 prNumber: null
+qePromote:
+  - Wed Mar 12 05:46:32 UTC 2025
