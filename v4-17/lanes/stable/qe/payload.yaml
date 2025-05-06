@@ -1,4 +1,3 @@
----
 index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:962573
 snapshot_id: cnv-fbc-v4-17-bl466
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.17
