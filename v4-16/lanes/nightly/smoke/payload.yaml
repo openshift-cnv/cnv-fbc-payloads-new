@@ -8,8 +8,9 @@ hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/h
 hco_bundle_version: v4.16.11.rhel9-6
 minorVersion: v4.16.11.rhel9
 version: v4-16
-releasePlan: qe
+releasePlan: smoke
 freightName: cnv-fbc-v4-16-k2ddk
 freightID: null
 prNumber: null
 firstRelease: false
+#
