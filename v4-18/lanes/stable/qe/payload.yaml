@@ -13,3 +13,5 @@ freightName: cnv-fbc-v4-18-x2m4b
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: https://issues.redhat.com/browse/CNV-63564
