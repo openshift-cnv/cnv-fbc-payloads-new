@@ -13,3 +13,5 @@ freightName: cnv-fbc-v4-14-qdxkr
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: https://issues.redhat.com/browse/CNV-61100
