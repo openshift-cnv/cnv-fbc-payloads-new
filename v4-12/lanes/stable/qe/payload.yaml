@@ -13,3 +13,5 @@ freightName: cnv-fbc-v4-12-tb9mr
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: CNV-37775
