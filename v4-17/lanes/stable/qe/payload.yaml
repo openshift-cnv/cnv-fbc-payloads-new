@@ -13,3 +13,5 @@ freightName: cnv-fbc-v4-17-jv2ns
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: https://issues.redhat.com/browse/CNV-65857
