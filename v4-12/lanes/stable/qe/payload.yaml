@@ -14,3 +14,5 @@ freightName: cnv-fbc-v4-12-zmqcl
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: CNV-63008
