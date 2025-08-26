@@ -16,3 +16,4 @@ prNumber: null
 firstRelease: false
 checkListEpic:
   URL: https://issues.redhat.com/browse/CNV-67486
+dummy: dummy
