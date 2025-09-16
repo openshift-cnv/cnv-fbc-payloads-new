@@ -14,3 +14,5 @@ freightName: cnv-fbc-v4-17-jxv96
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: CNV-68558
