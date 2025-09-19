@@ -1,7 +1,7 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1029594
-snapshot_id: cnv-fbc-v4-18-6gm5x
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1034412
+snapshot_id: cnv-fbc-v4-18-jxn2v
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.18
-fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v418-cnv-fbc@sha256:b883f25b56ede4d825b78cec552841d26d2a4b8eb20eb9458c59486b3656c3a6
+fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v418-cnv-fbc@sha256:47e1407c677cb1fe29cd165bdbc90acc28bf9891925a1e60e5d6fba984a7a99f
 channel: stable
 hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:1d984a34589472f1c554bb4a53b6df470104affacd341eccd5fa1e334a7d8854
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.18.13.rhel9-19
@@ -10,9 +10,7 @@ minorVersion: v4.18.13.rhel9
 rhelVersion: rhel9
 version: v4-18
 releasePlan: qe
-freightName: cnv-fbc-v4-18-6gm5x
+freightName: cnv-fbc-v4-18-jxn2v
 freightID: null
 prNumber: null
 firstRelease: false
-checkListEpic:
-  URL: https://issues.redhat.com/browse/CNV-67486
