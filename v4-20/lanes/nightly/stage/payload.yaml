@@ -1,5 +1,5 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1081578
-snapshot_id: cnv-fbc-v4-20-8xckr
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1081579
+snapshot_id: cnv-fbc-v4-20-s2msl
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.20
 fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v420-cnv-fbc@sha256:0aa75adcee33416e7b0085435149c99d5fb332ddc1e2b437a8d2216415d531a1
 channel: nightly
@@ -10,7 +10,7 @@ minorVersion: v4.20.3.rhel9
 rhelVersion: rhel9
 version: v4-20
 releasePlan: stage
-freightName: cnv-fbc-v4-20-8xckr
+freightName: cnv-fbc-v4-20-s2msl
 freightID: null
 prNumber: null
 firstRelease: false
