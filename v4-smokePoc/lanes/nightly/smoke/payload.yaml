@@ -13,4 +13,4 @@ releasePlan: smoke
 freightName: cnv-fbc-v4-18-znxd2
 freightID: null
 prNumber: null
-firstRelease: false
+firstRelease: true
