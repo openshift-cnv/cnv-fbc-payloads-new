@@ -7,9 +7,10 @@ metadata:
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/cancel-in-progress: "false"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "main" && ( "v4-smokePoc/lanes/nightly/smoke/***".pathChanged() || ".tekton/v4-smokepoc-push.yaml".pathChanged()
-      )
+    pipelinesascode.tekton.dev/on-cel-expression: >-
+      event == "push" &&
+      (target_branch == "main" || target_branch.startsWith("dev/")) &&
+      ("v4-smokePoc/lanes/nightly/smoke/***".pathChanged() || ".tekton/v4-smokepoc-push.yaml".pathChanged())
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: cnv-smoke-tests
@@ -37,7 +38,7 @@ spec:
       - name: revision
         value: wip/smoke
       - name: pathInRepo
-        value: "pipelines/build-container/pipeline.yaml"
+        value: "pipelines/run-cnv-smoke-tests/pipeline.yaml"
   taskRunTemplate:
     serviceAccountName: build-pipeline-v4-smokepoc
   workspaces:
