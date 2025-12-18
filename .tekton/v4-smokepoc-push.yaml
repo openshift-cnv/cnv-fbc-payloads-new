@@ -39,6 +39,8 @@ spec:
         value: wip/smoke
       - name: pathInRepo
         value: "pipelines/run-cnv-smoke-tests/pipeline.yaml"
+      - name: openshift_virtualization_test_image
+        value: quay.io/openshift-cnv/openshift-virtualization-tests:latest
   taskRunTemplate:
     serviceAccountName: build-pipeline-v4-smokepoc
   workspaces:
