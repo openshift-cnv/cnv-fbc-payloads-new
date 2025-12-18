@@ -35,7 +35,7 @@ spec:
       - name: url
         value: "https://gitlab.cee.redhat.com/openshift-virtualization/konflux-shared-pipelines.git"
       - name: revision
-        value: main
+        value: wip/smoke
       - name: pathInRepo
         value: "pipelines/build-container/pipeline.yaml"
   taskRunTemplate:
