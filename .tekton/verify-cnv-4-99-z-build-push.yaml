@@ -33,7 +33,7 @@ spec:
   - name: dockerfile
     value: Dockerfile
   - name: path-context
-    value: v4-smokePoc/lanes/nightly/smoke
+    value: v4-99/lanes/dev-preview/qe
   - name: openshift-virtualization-test-image
     value: quay.io/openshift-cnv/openshift-virtualization-tests:latest
   - name: cnv-version
