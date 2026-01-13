@@ -10,7 +10,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: >-
       event == "push" &&
       (target_branch == "main" || target_branch.startsWith("dev/")) &&
-      ("v4-smokePoc/lanes/nightly/smoke/***".pathChanged() || ".tekton/verify-cnv-4-99-z-build-push.yaml".pathChanged())
+      ("v4-99/lanes/dev-preview/qe/payload.yaml".pathChanged() || ".tekton/verify-cnv-4-99-z-build-push.yaml".pathChanged())
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: cnv-smoke-tests
@@ -19,6 +19,10 @@ metadata:
   name: verify-cnv-4-99-z-build-on-push
   namespace: cnv-qe-devops-tenant
 spec:
+  timeouts:
+    pipeline: "6h0m0s"  # Overall timeout for the PipelineRun
+    tasks: "5h0m0s"     # Cumulative timeout for non-finally tasks
+    finally: "1h0m0s"   # Cumulative timeout for finally tasks
   params:
   - name: git-url
     value: '{{source_url}}'
@@ -30,6 +34,12 @@ spec:
     value: Dockerfile
   - name: path-context
     value: v4-smokePoc/lanes/nightly/smoke
+  - name: openshift-virtualization-test-image
+    value: quay.io/openshift-cnv/openshift-virtualization-tests:latest
+  - name: cnv-version
+    value: "4.99"
+  - name: prow-job
+    value: periodic-ci-RedHatQE-interop-testing-master-cnv-odf-ocp4.20-konflux-cnv-odf-smoke-tests-aws-ipi-ocp420
   pipelineRef:
     resolver: git
     params:
@@ -39,8 +49,6 @@ spec:
         value: wip/smoke
       - name: pathInRepo
         value: "pipelines/run-cnv-smoke-tests/pipeline.yaml"
-      - name: openshift_virtualization_test_image
-        value: quay.io/openshift-cnv/openshift-virtualization-tests:latest
   taskRunTemplate:
     serviceAccountName: build-pipeline-verify-cnv-4-99-z-build
   workspaces:
