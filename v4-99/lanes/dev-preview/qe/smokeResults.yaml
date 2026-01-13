@@ -1,0 +1,8 @@
+bundle: v4.99.0.rhel9-2513
+channel: dev-preview
+freightName: cnv-fbc-v4-20-nrbl4
+payloadCommit: d101594038a58210c0060f53ecfa5561a6dd53bc
+prowJobUrl: https://prow.ci.openshift.org/view/gs/test-platform-results/logs/periodic-ci-RedHatQE-interop-testing-master-cnv-odf-ocp4.20-konflux-cnv-odf-smoke-tests-aws-ipi-ocp420/2011072721873539072
+prowJobYaml: https://prow.ci.openshift.org/prowjob?prowjob=67b40c82-21ba-4841-aabb-8a60b800ae5f
+smokeResults: failure
+snapshotID: cnv-fbc-v4-20-nrbl4
