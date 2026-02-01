@@ -1,0 +1,2 @@
+# This folder holds payload.yaml for the konflux-release stage
+# The payload is created and updated by Kargo during promotions
