@@ -1,4 +1,4 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub:v4.20
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1100298
 snapshot_id: cnv-fbc-v4-20-prod-sthgw
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.20
 fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v420-cnv-fbc@sha256:4ea096b827f050c1e4fcfadbdb9b34a86df1f26969f20582e112250422617f71
