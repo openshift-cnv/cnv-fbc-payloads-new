@@ -1,5 +1,5 @@
 index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1105607
-snapshot_id: cnv-fbc-v4-12-20260214-130602-000-q9
+snapshot_id: cnv-fbc-v4-12-20260214-130602-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.12
 fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/cnv-fbc-v4-12/v412-cnv-fbc@sha256:4f31facf8b859687bcf87e3fc0c8ea871fbdd0384a06f19cea3535ab7bf07aed
 channel: stable
@@ -11,7 +11,7 @@ minorVersion: v4.12.23
 rhelVersion: null
 version: v4-12
 releasePlan: stage
-freightName: cnv-fbc-v4-12-20260214-130602-000-q9
+freightName: cnv-fbc-v4-12-20260214-130602-000
 freightID: null
 prNumber: null
 firstRelease: false
