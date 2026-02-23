@@ -1,0 +1,43 @@
+---
+description: CNV FBC payloads repo structure, report conventions, and markdown table style
+globs: reports/**/*.md
+alwaysApply: false
+---
+
+# CNV FBC Payloads Repo
+
+## Repo Structure
+
+- **Versions**: `v4-12` through `v4-22`, plus `v4-99` and `v5-99` (dev/preview).
+- **Lanes**: `lanes/{channel}/{stage}/` — channels include `candidate`, `stable`, `nightly`, `dev-preview`.
+- **Key paths**:
+  - Smoke results: `v4-99/lanes/dev-preview/qe/smokeResults.yaml` (bundle, channel, smokeResults, prowJobUrl, etc.)
+  - VPR payloads: `v{version}/lanes/{candidate|stable}/verify-production-release/payload.yaml`
+
+## Reports
+
+Reports live in `reports/` and use this naming: `{report-name}-{YYYY-MM-DD}-to-{DD}.md`.
+
+### Smoke Results Report
+
+- **Source**: `v4-99/lanes/dev-preview/qe/smokeResults.yaml` git history
+- **Output**: `reports/smoke-results-weekly-{date-range}.md`
+- **Content**: Summary table (bundle, date, smokeResults, freight), Prow links, notes
+
+### Verify-Production-Release Report
+
+- **Source**: All `*/lanes/candidate/verify-production-release/payload.yaml` and `*/lanes/stable/verify-production-release/payload.yaml` (excluding v4-99, v5-99)
+- **Output**: `reports/verify-production-release-bundles-{date-range}.md`
+- **Content**: Summary table, detailed payloads (Field/Value), versions with no activity, notes
+
+## Markdown Table Style (MD060)
+
+Use spaces around pipes and dashes in tables:
+
+```markdown
+| Col1 | Col2 |
+| ---- | ---- |
+| a    | b    |
+```
+
+Not `||` or `|---|` — always `| --- |` for separator rows.
