@@ -12,6 +12,6 @@ rhelVersion: rhel9
 version: v4-20
 releasePlan: release-candidate
 freightName: cnv-fbc-v4-20-20260224-224016-000
-freightID: candidate-release.01kj90w48napnjnecc6cgx6dzq.b7644ec
+freightID: candidate-release.01kja5vrh13sxwb5xdvet34m79.bbfee49
 prNumber: null
 firstRelease: false
