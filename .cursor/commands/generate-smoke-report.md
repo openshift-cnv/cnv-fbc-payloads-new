@@ -7,6 +7,7 @@ Generate a smoke results summary report for v4.99 dev-preview.
 1. **Ask for date range** if not provided (default: last 7 days from today).
 
 2. **Query git history** for `v4-99/lanes/dev-preview/qe/smokeResults.yaml`:
+
    ```bash
    git log --since="YYYY-MM-DD" --until="YYYY-MM-DD" --oneline --follow -- v4-99/lanes/dev-preview/qe/smokeResults.yaml
    ```
