@@ -12,6 +12,6 @@ rhelVersion: rhel9
 version: v4-21
 releasePlan: konflux-release
 freightName: cnv-fbc-v4-21-20260309-153957-000
-freightID: konflux-release.01kke7vjd1v6rw0d7rn8vtvssw.5ab745c
-prNumber: https://gitlab.cee.redhat.com/openshift-virtualization/konflux-builds/v4-21/konflux-release-data/-/merge_requests/10
+freightID: konflux-release.01kkep46yrw90hab4yp4rxjb8v.5ab745c
+prNumber: https://gitlab.cee.redhat.com/openshift-virtualization/konflux-builds/v4-21/konflux-release-data/-/merge_requests/12
 firstRelease: false
