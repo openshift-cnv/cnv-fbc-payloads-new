@@ -1,1 +1,17 @@
-#
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1140166
+snapshot_id: cnv-fbc-v4-13-20260506-151410-000
+from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.13
+fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/cnv-fbc-v4-13/v413-cnv-fbc@sha256:8aa4c6a6fe71b77983308e0160430427aee280a00947eaa0937ffcb53e6a030a
+channel: nightly
+hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:c38eee7166ec91c1f4abf8bae74988c36f98816ded6d11b32393e09ecf00fd88
+hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.13.12.rhel9-276
+hco_bundle_version: v4.13.12.rhel9-276
+hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v4-13/hco-bundle-registry-rhel9:v4.13.12.rhel9-276
+minorVersion: v4.13.12.rhel9
+rhelVersion: rhel9
+version: v4-13
+releasePlan: smoke
+freightName: cnv-fbc-v4-13-20260506-151410-000
+freightID: smoke-tests.01kqyzxtjzhnwttwkbpmcres9k.c44a25f
+prNumber: null
+firstRelease: false
