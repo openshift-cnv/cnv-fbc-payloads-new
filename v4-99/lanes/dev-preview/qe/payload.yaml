@@ -1,4 +1,4 @@
-index_image: "null"
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1151484
 snapshot_id: cnv-fbc-v4-21-20260528-203948-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.21
 fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v421-cnv-fbc@sha256:62b83f58a4675d48be5f14d3be4e13a21f8437ae3b0506878be5665a7226f5e3
@@ -12,6 +12,6 @@ rhelVersion: rhel9
 version: v4-99
 releasePlan: qe
 freightName: cnv-fbc-v4-21-20260528-203948-000
-freightID: dev-preview-qe.01ksr6a0ajq94wze250ydn6yap.9581ac3
+freightID: dev-preview-qe.01kssba61c076pdegck5pqs2s4.19ea6ac
 prNumber: null
 firstRelease: true
