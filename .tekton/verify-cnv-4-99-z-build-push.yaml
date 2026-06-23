@@ -39,7 +39,7 @@ spec:
   - name: cnv-version
     value: "4.99"
   - name: prow-job
-    value: periodic-ci-RedHatQE-interop-testing-master-cnv-odf-ocp4.20-konflux-cnv-odf-smoke-tests-aws-ipi-ocp420
+    value: periodic-ci-openshift-cnv-cnv-ci-master-cnv-dev-preview-konflux-smoke
   pipelineRef:
     resolver: git
     params:
