@@ -8,10 +8,10 @@ hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/h
 hco_bundle_version: v4.99.0.rhel9-2896
 hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v4-99/hco-bundle-registry-rhel9:v4.99.0.rhel9-2896
 minorVersion: v4.99.0.rhel9
+releasePlan: qe
 rhelVersion: rhel9
 version: v4-99
 freightName: cnv-fbc-v4-22-20260629-213935-000
 freightID: dev-preview-qe.01kwapb4g9c01b0c8pgf1agbjb.53e2826
-releasePlan: qe
 prNumber: null
 firstRelease: true
