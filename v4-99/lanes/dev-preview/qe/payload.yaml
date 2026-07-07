@@ -1,6 +1,7 @@
 index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1170807
 snapshot_id: cnv-fbc-v4-22-20260629-213935-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.22
+releasePlan: qe
 fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v422-cnv-fbc@sha256:dc37d3a1867fb333ae6047e02e313fb71b5eb094042e0c53616f04756939caa1
 hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:f2c65191b05b1af6a4a1d052e0a65f01d3807c11e7cc26cc4d11f4dad8e837f4
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.99.0.rhel9-2896
@@ -13,5 +14,4 @@ version: v4-99
 freightName: cnv-fbc-v4-22-20260629-213935-000
 freightID: dev-preview-qe.01kwapb4g9c01b0c8pgf1agbjb.53e2826
 prNumber: null
-releasePlan: qe
 firstRelease: true
