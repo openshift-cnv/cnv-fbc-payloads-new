@@ -1,10 +1,10 @@
 index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1170807
 snapshot_id: cnv-fbc-v4-22-20260629-213935-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.22
-rhelVersion: rhel9
-version: v4-99
 releasePlan: qe
 channel: dev-preview
+rhelVersion: rhel9
+version: v4-99
 hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v4-99/hco-bundle-registry-rhel9:v4.99.0.rhel9-2896
 freightName: cnv-fbc-v4-22-20260629-213935-000
 freightID: dev-preview-qe.01kwapb4g9c01b0c8pgf1agbjb.53e2826
