@@ -15,3 +15,5 @@ freightName: cnv-fbc-v4-22-20260629-142659-000
 freightID: null
 prNumber: null
 firstRelease: false
+checkListEpic:
+  URL: CNV-91639
