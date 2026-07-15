@@ -3,6 +3,7 @@
 # 1. [Pattern]: Triggers on workflow_run after "CI Check" completes — works for forks.
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
+# 4. [Gotcha]: Fork PR SHAs aren't in the base repo — use workflow_run.pull_requests array.
 
 name: Auto Merge
 
@@ -27,12 +28,16 @@ jobs:
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_FROM_EVENT: ${{ github.event.workflow_run.pull_requests[0].number }}
         run: |
-          SHA="${{ github.event.workflow_run.head_sha }}"
-          PR_NUMBER=$(gh api "repos/${{ github.repository }}/commits/${SHA}/pulls" \
-            --jq '.[0].number // empty')
+          PR_NUMBER="$PR_FROM_EVENT"
           if [ -z "$PR_NUMBER" ]; then
-            echo "No open PR found for SHA ${SHA}, skipping."
+            SHA="${{ github.event.workflow_run.head_sha }}"
+            PR_NUMBER=$(gh api "repos/${{ github.repository }}/commits/${SHA}/pulls" \
+              --jq '.[0].number // empty' 2>/dev/null || true)
+          fi
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No open PR found, skipping."
             exit 0
           fi
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
