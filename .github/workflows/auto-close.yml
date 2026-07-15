@@ -1,0 +1,48 @@
+# .github/workflows/auto-close.yml
+# @ai-rules:
+# 1. [Pattern]: Reacts to check_suite completion, not individual check_run events.
+# 2. [Constraint]: Only acts on branches containing "dev-preview".
+# 3. [Purpose]: Closes PRs whose CI check failed, keeping the repo clean.
+
+name: Auto Close
+
+on:
+  check_suite:
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  checks: read
+
+jobs:
+  close:
+    if: >-
+      github.event.check_suite.conclusion == 'failure' &&
+      contains(github.event.check_suite.head_branch, 'dev-preview')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find open PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ github.event.check_suite.head_branch }}"
+          PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "$BRANCH" \
+            --base main \
+            --state open \
+            --json number \
+            --jq '.[0].number')
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "Found PR #$PR_NUMBER for branch $BRANCH"
+
+      - name: Close PR
+        if: steps.pr.outputs.number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checks failed — closing PR #${{ steps.pr.outputs.number }}"
+          gh pr close ${{ steps.pr.outputs.number }} \
+            --repo "${{ github.repository }}" \
+            --comment "Check suite failed. Closing automatically."

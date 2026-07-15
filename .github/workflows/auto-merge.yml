@@ -1,0 +1,49 @@
+# .github/workflows/auto-merge.yml
+# @ai-rules:
+# 1. [Pattern]: Reacts to check_suite completion, not individual check_run events.
+# 2. [Constraint]: Only acts on branches containing "dev-preview".
+# 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
+
+name: Auto Merge
+
+on:
+  check_suite:
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  merge:
+    if: >-
+      github.event.check_suite.conclusion == 'success' &&
+      contains(github.event.check_suite.head_branch, 'dev-preview')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find open PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ github.event.check_suite.head_branch }}"
+          PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "$BRANCH" \
+            --base main \
+            --state open \
+            --json number \
+            --jq '.[0].number')
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "Found PR #$PR_NUMBER for branch $BRANCH"
+
+      - name: Merge PR
+        if: steps.pr.outputs.number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checks passed — merging PR #${{ steps.pr.outputs.number }}"
+          gh pr merge ${{ steps.pr.outputs.number }} \
+            --repo "${{ github.repository }}" \
+            --merge --admin --delete-branch

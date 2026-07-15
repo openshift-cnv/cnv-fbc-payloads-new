@@ -1,0 +1,29 @@
+# .github/workflows/ci-check.yml
+# @ai-rules:
+# 1. [Pattern]: Runs CI on PRs from branches containing "dev-preview".
+# 2. [Constraint]: Fails the check if the branch name also contains "fail".
+# 3. [Purpose]: Gate for auto-merge/auto-close workflows that react to check_suite.
+
+name: CI Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+jobs:
+  ci:
+    if: contains(github.head_ref, 'dev-preview')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run checks
+        run: |
+          if echo "${{ github.head_ref }}" | grep -q "fail"; then
+            echo "CI check failed — branch name contains 'fail'"
+            exit 1
+          fi
+          echo "CI checks passed"
