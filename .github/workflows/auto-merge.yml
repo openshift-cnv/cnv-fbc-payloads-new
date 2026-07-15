@@ -3,9 +3,10 @@
 # 1. [Pattern]: Triggers on workflow_run after "CI Check" completes — works for forks.
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
-# 4. [Gotcha]: Fork PR SHAs aren't in the base repo — use workflow_run.pull_requests array.
+# 4. [Gotcha]: Fork PRs have empty pull_requests array and SHA not in base repo.
 # 5. [Gotcha]: gh pr checks --watch exits 0 even on failure — poll status via API instead.
 # 6. [Constraint]: concurrency group prevents duplicate merge attempts for the same PR.
+# 7. [Pattern]: PR lookup uses branch name search as primary — works for both forks and same-repo.
 
 name: Auto Merge
 
@@ -26,27 +27,27 @@ jobs:
       contains(github.event.workflow_run.head_branch, 'dev-preview')
     runs-on: ubuntu-latest
     concurrency:
-      group: auto-merge-${{ github.event.workflow_run.pull_requests[0].number }}
+      group: auto-merge-${{ github.event.workflow_run.head_branch }}
       cancel-in-progress: true
     steps:
       - name: Find open PR
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_FROM_EVENT: ${{ github.event.workflow_run.pull_requests[0].number }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          PR_NUMBER="$PR_FROM_EVENT"
+          PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "$BRANCH" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
           if [ -z "$PR_NUMBER" ]; then
-            SHA="${{ github.event.workflow_run.head_sha }}"
-            PR_NUMBER=$(gh api "repos/${{ github.repository }}/commits/${SHA}/pulls" \
-              --jq '.[0].number // empty' 2>/dev/null || true)
-          fi
-          if [ -z "$PR_NUMBER" ]; then
-            echo "No open PR found, skipping."
+            echo "No open PR found for branch $BRANCH, skipping."
             exit 0
           fi
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "Found PR #$PR_NUMBER"
+          echo "Found PR #$PR_NUMBER for branch $BRANCH"
 
       - name: Poll until all checks complete
         if: steps.pr.outputs.number

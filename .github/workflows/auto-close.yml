@@ -3,7 +3,7 @@
 # 1. [Pattern]: Triggers on workflow_run after "CI Check" completes — works for forks.
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Purpose]: Closes PRs whose CI check failed, keeping the repo clean.
-# 4. [Gotcha]: Fork PR SHAs aren't in the base repo — use workflow_run.pull_requests array.
+# 4. [Pattern]: PR lookup uses branch name search — works for both forks and same-repo.
 
 name: Auto Close
 
@@ -27,20 +27,20 @@ jobs:
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_FROM_EVENT: ${{ github.event.workflow_run.pull_requests[0].number }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: |
-          PR_NUMBER="$PR_FROM_EVENT"
+          PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
+            --head "$BRANCH" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
           if [ -z "$PR_NUMBER" ]; then
-            SHA="${{ github.event.workflow_run.head_sha }}"
-            PR_NUMBER=$(gh api "repos/${{ github.repository }}/commits/${SHA}/pulls" \
-              --jq '.[0].number // empty' 2>/dev/null || true)
-          fi
-          if [ -z "$PR_NUMBER" ]; then
-            echo "No open PR found, skipping."
+            echo "No open PR found for branch $BRANCH, skipping."
             exit 0
           fi
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "Found PR #$PR_NUMBER"
+          echo "Found PR #$PR_NUMBER for branch $BRANCH"
 
       - name: Close PR
         if: steps.pr.outputs.number
