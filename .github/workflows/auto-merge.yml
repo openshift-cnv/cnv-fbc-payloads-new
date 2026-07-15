@@ -4,7 +4,8 @@
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
 # 4. [Gotcha]: Fork PR SHAs aren't in the base repo — use workflow_run.pull_requests array.
-# 5. [Constraint]: Waits for ALL PR checks to pass before merging — prevents race with Konflux.
+# 5. [Gotcha]: gh pr checks --watch exits 0 even on failure — poll status via API instead.
+# 6. [Constraint]: concurrency group prevents duplicate merge attempts for the same PR.
 
 name: Auto Merge
 
@@ -24,6 +25,9 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       contains(github.event.workflow_run.head_branch, 'dev-preview')
     runs-on: ubuntu-latest
+    concurrency:
+      group: auto-merge-${{ github.event.workflow_run.pull_requests[0].number }}
+      cancel-in-progress: true
     steps:
       - name: Find open PR
         id: pr
@@ -44,15 +48,47 @@ jobs:
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
           echo "Found PR #$PR_NUMBER"
 
-      - name: Wait for all checks to pass
+      - name: Poll until all checks complete
         if: steps.pr.outputs.number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Waiting for all checks on PR #${{ steps.pr.outputs.number }}..."
-          gh pr checks ${{ steps.pr.outputs.number }} \
-            --repo "${{ github.repository }}" \
-            --watch --fail-fast
+          PR="${{ steps.pr.outputs.number }}"
+          REPO="${{ github.repository }}"
+          MAX_ATTEMPTS=60
+          INTERVAL=30
+
+          for i in $(seq 1 $MAX_ATTEMPTS); do
+            echo "=== Attempt $i/$MAX_ATTEMPTS ==="
+
+            CHECKS=$(gh pr checks "$PR" --repo "$REPO" --json name,state,conclusion 2>/dev/null || true)
+            if [ -z "$CHECKS" ]; then
+              echo "Could not fetch checks, retrying..."
+              sleep "$INTERVAL"
+              continue
+            fi
+
+            echo "$CHECKS" | jq -r '.[] | "\(.name): \(.state) / \(.conclusion)"'
+
+            PENDING=$(echo "$CHECKS" | jq '[.[] | select(.state != "COMPLETED")] | length')
+            FAILED=$(echo "$CHECKS" | jq '[.[] | select(.state == "COMPLETED" and .conclusion != "SUCCESS")] | length')
+
+            if [ "$FAILED" -gt 0 ]; then
+              echo "::error::One or more checks failed. Aborting merge."
+              exit 1
+            fi
+
+            if [ "$PENDING" -eq 0 ]; then
+              echo "All checks passed."
+              exit 0
+            fi
+
+            echo "$PENDING check(s) still pending, waiting ${INTERVAL}s..."
+            sleep "$INTERVAL"
+          done
+
+          echo "::error::Timed out waiting for checks after $((MAX_ATTEMPTS * INTERVAL))s."
+          exit 1
 
       - name: Merge PR
         if: steps.pr.outputs.number
