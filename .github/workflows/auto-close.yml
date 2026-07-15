@@ -1,13 +1,14 @@
 # .github/workflows/auto-close.yml
 # @ai-rules:
-# 1. [Pattern]: Reacts to check_suite completion, not individual check_run events.
+# 1. [Pattern]: Triggers on workflow_run after "CI Check" completes — works for forks.
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Purpose]: Closes PRs whose CI check failed, keeping the repo clean.
 
 name: Auto Close
 
 on:
-  check_suite:
+  workflow_run:
+    workflows: ["CI Check"]
     types: [completed]
 
 permissions:
@@ -17,8 +18,8 @@ permissions:
 jobs:
   close:
     if: >-
-      github.event.check_suite.conclusion == 'failure' &&
-      contains(github.event.check_suite.head_branch, 'dev-preview')
+      github.event.workflow_run.conclusion == 'failure' &&
+      contains(github.event.workflow_run.head_branch, 'dev-preview')
     runs-on: ubuntu-latest
     steps:
       - name: Find open PR
@@ -26,23 +27,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="${{ github.event.check_suite.head_branch }}"
-          PR_NUMBER=$(gh pr list \
-            --repo "${{ github.repository }}" \
-            --head "$BRANCH" \
-            --base main \
-            --state open \
-            --json number \
-            --jq '.[0].number')
+          SHA="${{ github.event.workflow_run.head_sha }}"
+          PR_NUMBER=$(gh api "repos/${{ github.repository }}/commits/${SHA}/pulls" \
+            --jq '.[0].number // empty')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No open PR found for SHA ${SHA}, skipping."
+            exit 0
+          fi
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "Found PR #$PR_NUMBER for branch $BRANCH"
+          echo "Found PR #$PR_NUMBER"
 
       - name: Close PR
         if: steps.pr.outputs.number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Checks failed — closing PR #${{ steps.pr.outputs.number }}"
+          echo "CI Check failed — closing PR #${{ steps.pr.outputs.number }}"
           gh pr close ${{ steps.pr.outputs.number }} \
             --repo "${{ github.repository }}" \
-            --comment "Check suite failed. Closing automatically."
+            --comment "CI Check failed. Closing automatically."

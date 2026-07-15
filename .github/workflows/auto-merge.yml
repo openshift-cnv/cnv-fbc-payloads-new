@@ -1,13 +1,14 @@
 # .github/workflows/auto-merge.yml
 # @ai-rules:
-# 1. [Pattern]: Reacts to check_suite completion, not individual check_run events.
+# 1. [Pattern]: Triggers on workflow_run after "CI Check" completes — works for forks.
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
 
 name: Auto Merge
 
 on:
-  check_suite:
+  workflow_run:
+    workflows: ["CI Check"]
     types: [completed]
 
 permissions:
@@ -18,8 +19,8 @@ permissions:
 jobs:
   merge:
     if: >-
-      github.event.check_suite.conclusion == 'success' &&
-      contains(github.event.check_suite.head_branch, 'dev-preview')
+      github.event.workflow_run.conclusion == 'success' &&
+      contains(github.event.workflow_run.head_branch, 'dev-preview')
     runs-on: ubuntu-latest
     steps:
       - name: Find open PR
@@ -27,23 +28,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="${{ github.event.check_suite.head_branch }}"
-          PR_NUMBER=$(gh pr list \
-            --repo "${{ github.repository }}" \
-            --head "$BRANCH" \
-            --base main \
-            --state open \
-            --json number \
-            --jq '.[0].number')
+          SHA="${{ github.event.workflow_run.head_sha }}"
+          PR_NUMBER=$(gh api "repos/${{ github.repository }}/commits/${SHA}/pulls" \
+            --jq '.[0].number // empty')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No open PR found for SHA ${SHA}, skipping."
+            exit 0
+          fi
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
-          echo "Found PR #$PR_NUMBER for branch $BRANCH"
+          echo "Found PR #$PR_NUMBER"
 
       - name: Merge PR
         if: steps.pr.outputs.number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Checks passed — merging PR #${{ steps.pr.outputs.number }}"
+          echo "CI Check passed — merging PR #${{ steps.pr.outputs.number }}"
           gh pr merge ${{ steps.pr.outputs.number }} \
             --repo "${{ github.repository }}" \
             --merge --admin --delete-branch
