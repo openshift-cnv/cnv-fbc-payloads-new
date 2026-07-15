@@ -71,10 +71,11 @@ jobs:
             echo "$CHECKS" | jq -r '.[] | "\(.name): \(.state) / \(.conclusion)"'
 
             PENDING=$(echo "$CHECKS" | jq '[.[] | select(.state != "COMPLETED")] | length')
-            FAILED=$(echo "$CHECKS" | jq '[.[] | select(.state == "COMPLETED" and .conclusion != "SUCCESS")] | length')
+            FAILED=$(echo "$CHECKS" | jq '[.[] | select(.state == "COMPLETED" and (.conclusion | IN("SUCCESS", "NEUTRAL", "SKIPPED") | not))] | length')
 
             if [ "$FAILED" -gt 0 ]; then
-              echo "::error::One or more checks failed. Aborting merge."
+              echo "::error::One or more checks failed or were cancelled. Aborting merge."
+              echo "$CHECKS" | jq -r '.[] | select(.state == "COMPLETED" and (.conclusion | IN("SUCCESS", "NEUTRAL", "SKIPPED") | not)) | "  BLOCKED: \(.name) — \(.conclusion)"'
               exit 1
             fi
 
