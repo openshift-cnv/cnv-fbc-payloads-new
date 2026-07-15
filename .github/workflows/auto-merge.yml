@@ -4,6 +4,7 @@
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
 # 4. [Gotcha]: Fork PR SHAs aren't in the base repo — use workflow_run.pull_requests array.
+# 5. [Constraint]: Waits for ALL PR checks to pass before merging — prevents race with Konflux.
 
 name: Auto Merge
 
@@ -43,12 +44,22 @@ jobs:
           echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
           echo "Found PR #$PR_NUMBER"
 
+      - name: Wait for all checks to pass
+        if: steps.pr.outputs.number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Waiting for all checks on PR #${{ steps.pr.outputs.number }}..."
+          gh pr checks ${{ steps.pr.outputs.number }} \
+            --repo "${{ github.repository }}" \
+            --watch --fail-fast
+
       - name: Merge PR
         if: steps.pr.outputs.number
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "CI Check passed — merging PR #${{ steps.pr.outputs.number }}"
+          echo "All checks passed — merging PR #${{ steps.pr.outputs.number }}"
           gh pr merge ${{ steps.pr.outputs.number }} \
             --repo "${{ github.repository }}" \
             --merge --admin --delete-branch
