@@ -4,7 +4,7 @@
 # 2. [Constraint]: Only acts on branches containing "dev-preview".
 # 3. [Gotcha]: Uses --admin to bypass branch protection; requires GITHUB_TOKEN with admin scope.
 # 4. [Gotcha]: Fork PRs have empty pull_requests array and SHA not in base repo.
-# 5. [Gotcha]: gh pr checks --watch exits 0 even on failure — poll status via API instead.
+# 5. [Gotcha]: gh pr checks --json uses state/bucket fields, NOT conclusion.
 # 6. [Constraint]: concurrency group prevents duplicate merge attempts for the same PR.
 # 7. [Pattern]: PR lookup uses branch name search as primary — works for both forks and same-repo.
 
@@ -68,21 +68,21 @@ jobs:
               exit 1
             fi
 
-            CHECKS=$(gh pr checks "$PR" --repo "$REPO" --json name,state,conclusion 2>/dev/null || true)
-            if [ -z "$CHECKS" ]; then
-              echo "Could not fetch checks, retrying..."
+            CHECKS=$(gh pr checks "$PR" --repo "$REPO" --json name,state,bucket 2>/dev/null || true)
+            if [ -z "$CHECKS" ] || [ "$CHECKS" = "[]" ]; then
+              echo "No checks found yet, retrying..."
               sleep "$INTERVAL"
               continue
             fi
 
-            echo "$CHECKS" | jq -r '.[] | "\(.name): \(.state) / \(.conclusion)"'
+            echo "$CHECKS" | jq -r '.[] | "\(.name): \(.bucket) (\(.state))"'
 
-            PENDING=$(echo "$CHECKS" | jq '[.[] | select(.state != "COMPLETED")] | length')
-            FAILED=$(echo "$CHECKS" | jq '[.[] | select(.state == "COMPLETED" and (.conclusion | IN("SUCCESS", "NEUTRAL", "SKIPPED") | not))] | length')
+            PENDING=$(echo "$CHECKS" | jq '[.[] | select(.bucket == "pending")] | length')
+            FAILED=$(echo "$CHECKS" | jq '[.[] | select(.bucket == "fail")] | length')
 
             if [ "$FAILED" -gt 0 ]; then
               echo "::error::One or more checks failed or were cancelled. Aborting merge."
-              echo "$CHECKS" | jq -r '.[] | select(.state == "COMPLETED" and (.conclusion | IN("SUCCESS", "NEUTRAL", "SKIPPED") | not)) | "  BLOCKED: \(.name) — \(.conclusion)"'
+              echo "$CHECKS" | jq -r '.[] | select(.bucket == "fail") | "  BLOCKED: \(.name) — \(.state)"'
               exit 1
             fi
 
