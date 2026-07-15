@@ -61,6 +61,12 @@ jobs:
           for i in $(seq 1 $MAX_ATTEMPTS); do
             echo "=== Attempt $i/$MAX_ATTEMPTS ==="
 
+            PR_STATE=$(gh pr view "$PR" --repo "$REPO" --json state --jq '.state' 2>/dev/null || true)
+            if [ "$PR_STATE" != "OPEN" ]; then
+              echo "PR #$PR is $PR_STATE — aborting."
+              exit 1
+            fi
+
             CHECKS=$(gh pr checks "$PR" --repo "$REPO" --json name,state,conclusion 2>/dev/null || true)
             if [ -z "$CHECKS" ]; then
               echo "Could not fetch checks, retrying..."
@@ -96,7 +102,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "All checks passed — merging PR #${{ steps.pr.outputs.number }}"
-          gh pr merge ${{ steps.pr.outputs.number }} \
-            --repo "${{ github.repository }}" \
-            --merge --admin --delete-branch
+          PR="${{ steps.pr.outputs.number }}"
+          REPO="${{ github.repository }}"
+          PR_STATE=$(gh pr view "$PR" --repo "$REPO" --json state --jq '.state')
+          if [ "$PR_STATE" != "OPEN" ]; then
+            echo "PR #$PR is $PR_STATE — skipping merge."
+            exit 0
+          fi
+          echo "All checks passed — merging PR #$PR"
+          gh pr merge "$PR" --repo "$REPO" --merge --admin --delete-branch
