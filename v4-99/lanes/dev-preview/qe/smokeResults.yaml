@@ -1,7 +1,7 @@
 bundle: v4.99.0.rhel9-2922
 channel: dev-preview
 freightName: cnv-fbc-v4-22-20260714-131351-000
-payloadCommit: 0b7f49dd5cffa281448b99c037389bd5cb21b094
+payloadCommit: 4f3000a86e84005cc90f31949bc4bf26d9edd34d
 prowJobUrl: https://prow.ci.openshift.org/view/dummy-dev-job
 prowJobYaml: https://prow.ci.openshift.org/prowjob/dummy-dev-job.yaml
 smokeResults: success
