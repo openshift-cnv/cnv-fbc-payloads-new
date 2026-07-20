@@ -1,8 +1,8 @@
-bundle: v4.99.0.rhel9-2922
+bundle: v4.99.0.rhel9-2927
 channel: dev-preview
-freightName: cnv-fbc-v4-22-20260714-131351-000
-payloadCommit: 3d9caa6b01bc846f202660e6fb05303dd94ac1db
+freightName: cnv-fbc-v4-22-20260719-132108-000
+payloadCommit: eb7203e9f84cc468b159ba1c4de33d9bcc28ac03
 prowJobUrl: https://prow.ci.openshift.org/view/dummy-dev-job
 prowJobYaml: https://prow.ci.openshift.org/prowjob/dummy-dev-job.yaml
 smokeResults: success
-snapshotID: cnv-fbc-v4-22-20260714-131351-000
+snapshotID: cnv-fbc-v4-22-20260719-132108-000
