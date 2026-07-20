@@ -11,7 +11,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: >-
       event == "pull_request" &&
       (target_branch == "main" || target_branch.startsWith("dev/")) &&
-      ("v4-99/lanes/dev-preview/qe/payload.yaml".pathChanged() || ".tekton/verify-cnv-4-99-z-build-pull-request.yaml".pathChanged())
+      ("v4-99/lanes/dev-preview/qe/payload.yaml".pathChanged() || ".tekton/verify-cnv-4-99-z-build-pull-request.yaml".pathChanged()) && body.sender.login != "kargo-konflux[bot]"
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: cnv-smoke-tests
