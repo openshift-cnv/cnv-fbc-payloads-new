@@ -41,6 +41,8 @@ spec:
     value: "4.99"
   - name: prow-job
     value: periodic-ci-openshift-cnv-cnv-ci-master-cnv-dev-preview-konflux-smoke
+  - name: pull-request-number
+    value: '{{pull_request_number}}'
   pipelineRef:
     resolver: git
     params:
