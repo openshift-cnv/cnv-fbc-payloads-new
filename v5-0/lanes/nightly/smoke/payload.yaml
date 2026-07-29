@@ -12,6 +12,6 @@ rhelVersion: rhel9
 version: v5-0
 releasePlan: smoke
 freightName: cnv-fbc-v5-0-20260729-143414-000
-freightID: smoke-tests.01kyq9zhq9bzj7jma0fb6nx9d2.c3794ce
+freightID: smoke-tests.01kyqa2yvj398dd1xqfm5pfatc.c3794ce
 prNumber: null
 firstRelease: true
