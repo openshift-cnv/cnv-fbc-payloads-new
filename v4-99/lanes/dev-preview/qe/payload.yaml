@@ -11,6 +11,7 @@ minorVersion: v4.99.0.rhel9
 rhelVersion: rhel9
 releasePlan: qe
 version: v4-99
+releasePlan: qe
 freightName: cnv-fbc-v4-22-20260727-125021-000
 freightID: dev-preview-qe.01kyhxs6xeqn3e7gy4zvf7abp2.1eccd6a
 prNumber: null
