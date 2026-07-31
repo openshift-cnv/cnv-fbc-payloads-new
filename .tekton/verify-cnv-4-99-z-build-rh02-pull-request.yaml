@@ -10,7 +10,7 @@ metadata:
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: >-
       event == "pull_request" && body.action == "opened" &&
-      target_branch == "main" && source_branch.startsWith("dev-rh02") &&
+      target_branch == "dev-rh02" &&
       ("v4-99/lanes/dev-preview/qe/payload.yaml".pathChanged() || ".tekton/verify-cnv-4-99-z-build-rh02-pull-request.yaml".pathChanged())
   creationTimestamp: null
   labels:
