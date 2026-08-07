@@ -1,0 +1,62 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com/openshift-cnv/cnv-fbc-payloads-new?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/cancel-in-progress: "false"
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/target-namespace: "vme-release-testing-tenant"
+    pipelinesascode.tekton.dev/on-cel-expression: >-
+      event == "pull_request" && body.action == "opened" &&
+      target_branch == "dev-rh02-5-0" &&
+      ("v5-0/lanes/nightly/smoke/payload.yaml".pathChanged() || ".tekton/verify-cnv-5-0-z-build-rh02-pull-request.yaml".pathChanged())
+  creationTimestamp: null
+  labels:
+    appstudio.openshift.io/application: cnv-smoke-tests
+    appstudio.openshift.io/component: verify-cnv-5-0-z-build-rh02
+    pipelines.appstudio.openshift.io/type: build
+  name: verify-cnv-5-0-z-build-rh02-on-pull-request
+  namespace: vme-release-testing-tenant
+spec:
+  timeouts:
+    pipeline: "6h0m0s"
+    tasks: "5h0m0s"
+    finally: "1h0m0s"
+  params:
+  - name: git-url
+    value: '{{source_url}}'
+  - name: revision
+    value: '{{revision}}'
+  - name: output-image
+    value: quay.io/redhat-user-workloads/vme-release-testing-tenant/verify-cnv-5-0-z-build-rh02:{{revision}}
+  - name: dockerfile
+    value: Dockerfile
+  - name: path-context
+    value: v5-0/lanes/nightly/smoke
+  - name: openshift-virtualization-test-image
+    value: quay.io/openshift-cnv/openshift-virtualization-tests:latest
+  - name: cnv-version
+    value: "5.0"
+  - name: prow-job
+    value: periodic-ci-openshift-cnv-cnv-ci-master-cnv-odf-ocp5.0-konflux-smoke
+  - name: pull-request-number
+    value: '{{pull_request_number}}'
+  pipelineRef:
+    resolver: git
+    params:
+      - name: url
+        value: "https://github.com/openshift-cnv/tekton-tasks.git"
+      - name: revision
+        value: feat/smoke-test
+      - name: pathInRepo
+        value: "pipelines/run-cnv-smoke-tests/pipeline.yaml"
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-verify-cnv-5-0-z-build-rh02
+  workspaces:
+  - name: git-auth
+    secret:
+      secretName: '{{ git_auth_secret }}'
+status: {}
