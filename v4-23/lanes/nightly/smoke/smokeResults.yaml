@@ -1,0 +1,8 @@
+bundle: v4.23.0.rhel9-40
+channel: nightly
+freightName: cnv-fbc-v4-23-20260805-144137-000
+payloadCommit: 61469fbd8e186cbd7ab06f3094b929bb1a648fce
+prowJobUrl: https://prow.ci.openshift.org/view/gs/test-platform-results/logs/periodic-ci-openshift-cnv-cnv-ci-master-cnv-odf-ocp4.23-konflux-smoke/2087061457207300096
+prowJobYaml: https://prow.ci.openshift.org/prowjob?prowjob=97fe5f9f-a1df-4ca3-a85d-2dfbf6ff0026
+smokeResults: success
+snapshotID: cnv-fbc-v4-23-20260805-144137-000
