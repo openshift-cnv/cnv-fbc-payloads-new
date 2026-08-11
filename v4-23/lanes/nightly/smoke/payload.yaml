@@ -9,8 +9,8 @@ hco_bundle_version: v4.23.0.rhel9-40
 hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v4-23/hco-bundle-registry-rhel9:v4.23.0.rhel9-40
 minorVersion: v4.23.0.rhel9
 rhelVersion: rhel9
-version: v4-23
 releasePlan: smoke
+version: v4-23
 freightName: cnv-fbc-v4-23-20260805-144137-000
 freightID: smoke-tests.01kz984h5bfbtw63nmksynzwvt.7cf01d5
 prNumber: null
