@@ -1,0 +1,8 @@
+bundle: v5.0.0.rhel9-48
+channel: nightly
+freightName: cnv-fbc-v5-0-20260813-094543-000
+payloadCommit: ee08813ad99ff829d147787e03154c841e7591c7
+prowJobUrl: https://prow.ci.openshift.org/view/mock-test-failure
+prowJobYaml: https://prow.ci.openshift.org/prowjob?prowjob=mock-test-failure
+smokeResults: failure
+snapshotID: cnv-fbc-v5-0-20260813-094543-000
