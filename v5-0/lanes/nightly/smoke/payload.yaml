@@ -8,9 +8,9 @@ hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/h
 hco_bundle_version: v5.0.0.rhel9-48
 hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v5-0/hco-bundle-registry-rhel9:v5.0.0.rhel9-48
 minorVersion: v5.0.0.rhel9
-releasePlan: smoke
 rhelVersion: rhel9
 version: v5-0
+releasePlan: smoke
 freightName: cnv-fbc-v5-0-20260813-094543-000
 freightID: smoke-tests.01kzx9pgy9ewzx6b5grfhe6dh3.743822b
 prNumber: null
