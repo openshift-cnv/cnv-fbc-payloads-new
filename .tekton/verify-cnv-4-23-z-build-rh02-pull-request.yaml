@@ -44,6 +44,8 @@ spec:
     value: periodic-ci-openshift-cnv-cnv-ci-master-cnv-odf-ocp4.23-konflux-smoke
   - name: pull-request-number
     value: '{{pull_request_number}}'
+  - name: git-auth-secret
+    value: '{{git_auth_secret}}'
   pipelineRef:
     resolver: git
     params:
