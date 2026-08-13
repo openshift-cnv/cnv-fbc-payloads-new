@@ -46,6 +46,8 @@ spec:
     value: '{{pull_request_number}}'
   - name: git-auth-secret
     value: '{{git_auth_secret}}'
+  - name: sender
+    value: '{{sender}}'
   pipelineRef:
     resolver: git
     params:
