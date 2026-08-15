@@ -12,6 +12,6 @@ rhelVersion: rhel9
 version: v4-21
 releasePlan: gating
 freightName: cnv-fbc-v4-21-20260815-152855-000
-freightID: gating-tests.01m031zzfnq8g26tj61asy7xhx.8694dfe
+freightID: gating-tests.01m03305mbz58mzgn76b24bh3q.8694dfe
 prNumber: null
 firstRelease: false
