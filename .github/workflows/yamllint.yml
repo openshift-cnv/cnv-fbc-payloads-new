@@ -1,0 +1,25 @@
+name: YAML Lint
+
+on:
+  pull_request:
+    paths:
+      - "**/payload.yaml"
+      - ".yamllint.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "**/payload.yaml"
+      - ".yamllint.yml"
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint payload.yaml files
+        run: git ls-files '**/payload.yaml' -z | xargs -0 yamllint -c .yamllint.yml --strict
