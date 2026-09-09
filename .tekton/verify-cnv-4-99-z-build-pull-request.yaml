@@ -11,7 +11,7 @@ metadata:
     pipelinesascode.tekton.dev/target-namespace: "cnv-qe-devops-tenant"
     pipelinesascode.tekton.dev/on-cel-expression: >-
       event == "pull_request" && body.action == "opened" &&
-      (target_branch == "main" || target_branch.startsWith("dev/")) &&
+      (target_branch == "dev-smoke" || target_branch.startsWith("dev-smoke/")) &&
       ("v4-99/lanes/dev-preview/qe/payload.yaml".pathChanged() || ".tekton/verify-cnv-4-99-z-build-pull-request.yaml".pathChanged())
   creationTimestamp: null
   labels:
