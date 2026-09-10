@@ -12,7 +12,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: >-
       event == "pull_request" && body.action == "opened" &&
       (target_branch == "dev-smoke" || target_branch.startsWith("dev-smoke/")) &&
-      ("v4-99/lanes/dev-preview/qe/payload.yaml".pathChanged() || ".tekton/verify-cnv-4-99-z-build-pull-request.yaml".pathChanged())
+      "v4-99/lanes/dev-preview/smoke/payload.yaml".pathChanged()
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: cnv-smoke-tests
@@ -35,7 +35,7 @@ spec:
   - name: dockerfile
     value: Dockerfile
   - name: path-context
-    value: v4-99/lanes/dev-preview/qe
+    value: v4-99/lanes/dev-preview/smoke
   - name: openshift-virtualization-test-image
     value: quay.io/openshift-cnv/openshift-virtualization-tests:latest
   - name: cnv-version
