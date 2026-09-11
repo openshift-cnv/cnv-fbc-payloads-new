@@ -1,7 +1,7 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1209134
-snapshot_id: cnv-fbc-v4-21-20260910-170631-000
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1209538
+snapshot_id: cnv-fbc-v4-21-20260911-083946-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.21
-fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v421-cnv-fbc@sha256:6d875efa37922eaa937f7ce73ec935ec3f4b37a806109974a88b12f6811e6f94
+fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v421-cnv-fbc@sha256:416ed0b8c8babbae7ecc996d7f9e4f45b105158a8ac8adae8f32e0de61f76dde
 channel: candidate
 hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:46e1e283a452c2561c8d78a7280f7bb2e1249569832c3764ef402ac8340d18da
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.21.19.rhel9-4
@@ -11,7 +11,7 @@ minorVersion: v4.21.19.rhel9
 rhelVersion: rhel9
 version: v4-21
 releasePlan: gating
-freightName: cnv-fbc-v4-21-20260910-170631-000
-freightID: gating-tests.01m265q7kdggsff01n1szz5taa.0b6890e
+freightName: cnv-fbc-v4-21-20260911-083946-000
+freightID: gating-tests.01m27vm7katgr190ff9rmw3h01.30f9aed
 prNumber: null
 firstRelease: false
