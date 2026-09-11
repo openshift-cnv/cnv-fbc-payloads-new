@@ -1,7 +1,7 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1209052
-snapshot_id: cnv-fbc-v4-23-20260910-154625-000
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1209535
+snapshot_id: cnv-fbc-v4-23-20260911-083946-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.23
-fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v423-cnv-fbc@sha256:da097af7199c566e493cc75e406c4529ee6684780465370ba435739518511d3a
+fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v423-cnv-fbc@sha256:fa356ed69502f0f4980a5cd18959ad6edc68ddd85a77984e1d62718cc377123d
 channel: nightly
 hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:505e6a0fedc53df1397ddf9d6442866cb892ce7bee72e1205a09aefcaa34d023
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.23.0.rhel9-73
@@ -11,7 +11,7 @@ minorVersion: v4.23.0.rhel9
 rhelVersion: rhel9
 version: v4-23
 releasePlan: smoke
-freightName: cnv-fbc-v4-23-20260910-154625-000
-freightID: smoke-tests.01m2618rjy9v382w4vn4e33x2n.58cebfe
+freightName: cnv-fbc-v4-23-20260911-083946-000
+freightID: smoke-tests.01m27vsmmw0xfak2haj3yg60pd.db37300
 prNumber: null
 firstRelease: true
