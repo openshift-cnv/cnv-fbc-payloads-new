@@ -9,9 +9,9 @@ hco_bundle_version: v5.0.0.rhel9-102
 hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v5-0/hco-bundle-registry-rhel9:v5.0.0.rhel9-102
 minorVersion: v5.0.0.rhel9
 rhelVersion: rhel9
-version: v5-0
+version: v5-2
 releasePlan: gating
 freightName: cnv-fbc-v5-0-20261011-122210-000
-freightID: gating-tests.01m4ng455q5gaedhagepty63x8.3dddca7
+freightID: gating-tests.01m4r1pke1m7yrj0v6v4rjk3m9.cf5bba7
 prNumber: null
 firstRelease: true
