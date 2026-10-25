@@ -12,6 +12,6 @@ rhelVersion: rhel9
 version: v4-16
 releasePlan: prod
 freightName: cnv-fbc-v4-16-20261025-100007-000
-freightID: nightly-prod.01m5sjdcryr8q294d5gzwjngt2.8a6f1a9
+freightID: nightly-prod.01m5smvjf8v93rr4ahj9cmct28.8a6f1a9
 prNumber: null
 firstRelease: false
