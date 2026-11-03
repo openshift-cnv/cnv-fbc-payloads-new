@@ -13,6 +13,7 @@ on:
       - "**/payload.yaml"
       - ".yamllint.yml"
       - ".github/workflows/yamllint.yml"
+  workflow_dispatch:
 
 jobs:
   yamllint:
