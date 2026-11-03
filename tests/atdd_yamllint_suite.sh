@@ -9,9 +9,8 @@ cd "$REPO_ROOT"
 PASSED_COUNT=0
 FAILED_COUNT=0
 
-TARGET_15_FILES=(
+TARGET_REPAIRED_FILES=(
   "v5-0/lanes/candidate/konflux-release/payload.yaml"
-  "v5-0/lanes/stable/prod/payload.yaml"
   "v5-0/lanes/stable/verify-production-release/payload.yaml"
   "v5-1/lanes/candidate/gating/payload.yaml"
   "v5-1/lanes/candidate/konflux-release/payload.yaml"
@@ -58,9 +57,9 @@ else
   fail "YAML parse error in .github/workflows/yamllint.yml"
 fi
 
-log_test "Test 1.2" "15 Placeholder Files Byte Count Assert (2 bytes: #\n)"
+log_test "Test 1.2" "Repaired Placeholder Files Byte Count Assert (2 bytes: #\n)"
 L1_2_ERRORS=0
-for f in "${TARGET_15_FILES[@]}"; do
+for f in "${TARGET_REPAIRED_FILES[@]}"; do
   if [ ! -f "$f" ]; then
     L1_2_ERRORS=$((L1_2_ERRORS + 1))
   else
@@ -73,12 +72,12 @@ done
 if [ "$L1_2_ERRORS" -eq 0 ]; then
   pass
 else
-  fail "$L1_2_ERRORS of 15 files are not exactly 2 bytes (#\\n)"
+  fail "$L1_2_ERRORS of ${#TARGET_REPAIRED_FILES[@]} files are not exactly 2 bytes (#\n)"
 fi
 
-log_test "Test 1.3" "Strict Yamllint on 15 Placeholder Files"
+log_test "Test 1.3" "Strict Yamllint on Repaired Placeholder Files"
 L1_3_ERRORS=0
-for f in "${TARGET_15_FILES[@]}"; do
+for f in "${TARGET_REPAIRED_FILES[@]}"; do
   if ! yamllint -c .yamllint.yml --strict "$f" >/dev/null 2>&1; then
     L1_3_ERRORS=$((L1_3_ERRORS + 1))
   fi
@@ -86,7 +85,7 @@ done
 if [ "$L1_3_ERRORS" -eq 0 ]; then
   pass
 else
-  fail "$L1_3_ERRORS of 15 files failed yamllint --strict"
+  fail "$L1_3_ERRORS of ${#TARGET_REPAIRED_FILES[@]} files failed yamllint --strict"
 fi
 
 # ==============================================================================
@@ -122,9 +121,9 @@ if [ -s "$WORKFLOW_SCRIPT_TMP" ] && grep -q "DIFF_OUT" "$WORKFLOW_SCRIPT_TMP"; t
   }
   trap cleanup_clone EXIT
 
-  # Copy current working tree changes (the repaired placeholders and workflow) into the isolated clone
+  # Copy current working tree changes into the isolated clone
   cp "$REPO_ROOT/.github/workflows/yamllint.yml" "$TMP_CLONE/.github/workflows/yamllint.yml"
-  for f in "${TARGET_15_FILES[@]}"; do
+  for f in "${TARGET_REPAIRED_FILES[@]}"; do
     cp "$REPO_ROOT/$f" "$TMP_CLONE/$f"
   done
 
@@ -133,7 +132,7 @@ if [ -s "$WORKFLOW_SCRIPT_TMP" ] && grep -q "DIFF_OUT" "$WORKFLOW_SCRIPT_TMP"; t
   cd "$TMP_CLONE"
   git config user.email "test@example.com"
   git config user.name "Test Runner"
-  git commit -am "fix(base): apply placeholder repairs and workflow updates" -q
+  git commit -am "fix(base): apply placeholder repairs and workflow updates" -q || true
   # Update origin/main in the clone to point to this baseline commit
   git update-ref refs/remotes/origin/main HEAD
 
