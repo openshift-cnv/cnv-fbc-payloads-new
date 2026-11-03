@@ -5,21 +5,86 @@ on:
     paths:
       - "**/payload.yaml"
       - ".yamllint.yml"
+      - ".github/workflows/yamllint.yml"
   push:
     branches:
       - main
     paths:
       - "**/payload.yaml"
       - ".yamllint.yml"
+      - ".github/workflows/yamllint.yml"
 
 jobs:
   yamllint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install yamllint
-        run: pip install yamllint
+        run: pip install --no-cache-dir yamllint==1.35.1
 
       - name: Lint payload.yaml files
-        run: git ls-files '**/payload.yaml' -z | xargs -0 yamllint -c .yamllint.yml --strict
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          LINT_ALL=false
+          DIFF_RANGE=""
+          DIFF_OUT=$(mktemp)
+          CONFIG_OUT=$(mktemp)
+          trap 'rm -f "$DIFF_OUT" "$CONFIG_OUT"' EXIT
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            echo "Pull request detected: validating origin/${BASE_REF}"
+            if git rev-parse --verify -q "origin/${BASE_REF}" >/dev/null 2>&1; then
+              if git merge-base "origin/${BASE_REF}" HEAD >/dev/null 2>&1; then
+                DIFF_RANGE="origin/${BASE_REF}...HEAD"
+              else
+                echo "No common ancestor between origin/${BASE_REF} and HEAD; falling back to full scan."
+                LINT_ALL=true
+              fi
+            else
+              echo "Base ref origin/${BASE_REF} unresolvable; falling back to full scan."
+              LINT_ALL=true
+            fi
+          elif [ "$EVENT_NAME" = "push" ] && [ -n "$BEFORE_SHA" ] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]; then
+            if git rev-parse --verify -q "${BEFORE_SHA}^{commit}" >/dev/null 2>&1; then
+              echo "Push detected: comparing against ${BEFORE_SHA}"
+              DIFF_RANGE="${BEFORE_SHA}..HEAD"
+            else
+              echo "Prior commit SHA unresolvable; falling back to full scan."
+              LINT_ALL=true
+            fi
+          else
+            echo "Event '$EVENT_NAME' or initial push; defaulting to full repository scan."
+            LINT_ALL=true
+          fi
+
+          # Check config change or collect changed payload files
+          if [ -n "$DIFF_RANGE" ]; then
+            git diff --name-only "$DIFF_RANGE" -- .yamllint.yml > "$CONFIG_OUT"
+            if [ -s "$CONFIG_OUT" ]; then
+              echo ".yamllint.yml was modified in range; triggering full repository scan."
+              LINT_ALL=true
+            else
+              git diff -z --name-only --diff-filter=ACMR "$DIFF_RANGE" -- ':(glob)**/payload.yaml' > "$DIFF_OUT"
+            fi
+          fi
+
+          if [ "$LINT_ALL" = "true" ]; then
+            echo "Running full yamllint across all payload.yaml files..."
+            git ls-files -z ':(glob)**/payload.yaml' | xargs -0 -r yamllint -c .yamllint.yml --strict --
+          elif [ -s "$DIFF_OUT" ]; then
+            echo "Linting modified payload.yaml file(s):"
+            xargs -0 -r printf ' - %s\n' < "$DIFF_OUT"
+            xargs -0 -r yamllint -c .yamllint.yml --strict -- < "$DIFF_OUT"
+          else
+            echo "No payload.yaml files were modified in this run. Skipping lint."
+          fi
