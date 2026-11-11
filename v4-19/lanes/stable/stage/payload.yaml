@@ -1,7 +1,7 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1247587
-snapshot_id: cnv-fbc-v4-19-20261109-142049-000
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1248816
+snapshot_id: cnv-fbc-v4-19-20261111-174439-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.19
-fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v419-cnv-fbc@sha256:b8c31fd4d069e10c72d3241d4b3d2173b7cf4ff9a19b0f5898e17bec10d6779a
+fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v419-cnv-fbc@sha256:f3cca080ac1d1583c3758f92a8d72221be7a4e83888dd57bb0fb768ccb8e4a0f
 channel: stable
 hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:29c685826d802dac0c4f421b97595f8ce97ce5dded5f352cabbea8a6a3c929c4
 hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.19.46.rhel9-5
@@ -11,7 +11,7 @@ minorVersion: v4.19.46.rhel9
 rhelVersion: rhel9
 version: v4-19
 releasePlan: stage
-freightName: cnv-fbc-v4-19-20261109-142049-000
+freightName: cnv-fbc-v4-19-20261111-174439-000
 freightID: null
 prNumber: null
 firstRelease: false
