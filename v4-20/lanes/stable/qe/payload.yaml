@@ -1,19 +1,17 @@
-index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1233171
-snapshot_id: cnv-fbc-v4-20-20261019-135236-000
+index_image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1256154
+snapshot_id: cnv-fbc-v4-20-20261125-134932-000
 from_index: registry-proxy.engineering.redhat.com/rh-osbs/iib-pub-pending:v4.20
-fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v420-cnv-fbc@sha256:281a5055dbd0c5cd676f089e21364fdb6efd6a6260410d017aeca6fa4bdce5a5
+fbc_fragment: quay.io/redhat-user-workloads/cnv-fbc-tenant/v420-cnv-fbc@sha256:3451d74a4a2e7105f2262cbb534c5f84fbe9f0f0d2ee6af484b43b2fe7645122
 channel: stable
-hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:864bc7bb94d74b76d63c30677721b15ce8ad893b6ba04fde1f9ccb2dc0a88d2b
-hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.20.35.rhel9-5
-hco_bundle_version: v4.20.35.rhel9-5
-hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v4-20/hco-bundle-registry-rhel9:v4.20.35.rhel9-5
-minorVersion: v4.20.35.rhel9
+hco_bundle_registry_by_sha: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9@sha256:f004a95124ffb6b9d8313b6dce7a407ef5a5ba93be9a30cacf9c978731eab597
+hco_bundle_registry_by_tag: registry.redhat.io/container-native-virtualization/hco-bundle-registry-rhel9:v4.20.42.rhel9-11
+hco_bundle_version: v4.20.42.rhel9-11
+hco_bundle_url: quay.io/openshift-virtualization/konflux-builds/v4-20/hco-bundle-registry-rhel9:v4.20.42.rhel9-11
+minorVersion: v4.20.42.rhel9
 rhelVersion: rhel9
 version: v4-20
 releasePlan: qe
-freightName: cnv-fbc-v4-20-20261019-135236-000
+freightName: cnv-fbc-v4-20-20261125-134932-000
 freightID: null
 prNumber: null
 firstRelease: false
-checkListEpic:
-  URL: CNV-99487
