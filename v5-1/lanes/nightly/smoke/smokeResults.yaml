@@ -1,8 +1,8 @@
-bundle: v5.1.0.rhel9-44
+bundle: v5.1.0.rhel9-54
 channel: nightly
-freightName: cnv-fbc-v5-1-20261112-103400-000
-payloadCommit: a42c00cb22beab101c04c6f0758fc1079d0386b1
-prowJobUrl: https://prow.ci.openshift.org/view/gs/test-platform-results-public/logs/periodic-ci-openshift-cnv-cnv-ci-master-cnv-odf-ocp5.1-konflux-smoke/2120851946188312576
-prowJobYaml: https://prow.ci.openshift.org/prowjob?prowjob=ede2b41c-7893-4f47-a061-43bba7cc3cc9
+freightName: cnv-fbc-v5-1-20261126-090311-000
+payloadCommit: a78a22ed290d85fb9121b16ada30bfdfe0518476
+prowJobUrl: https://prow.ci.openshift.org/view/gs/test-platform-results-public/logs/periodic-ci-openshift-cnv-cnv-ci-master-cnv-odf-ocp5.1-konflux-smoke/2125884037439426560
+prowJobYaml: https://prow.ci.openshift.org/prowjob?prowjob=75546688-097b-4723-87c3-1e0240b7e978
 smokeResults: success
-snapshotID: cnv-fbc-v5-1-20261112-103400-000
+snapshotID: cnv-fbc-v5-1-20261126-090311-000
